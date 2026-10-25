@@ -53,15 +53,16 @@
     },
     "same_task_competitor_comparison": {"status":"not_run","tools":"ChatGPT and CarbonPlan calculator","reason":"No browser session or common end-to-end trial was available. The CarbonPlan product audit above is a documented page review, not a benchmark."},
     "portkey_connection_attempts": {
-      "status": "three_connection_level_URLErrors_without_HTTP_response",
+      "status": "four_connection_level_URLErrors_without_upstream_HTTP_response",
       "model": "gpt-6-luna",
       "api_called": true,
       "attempts": [
         {"time_utc":"2026-10-25T17:28:50+00:00","excerpt_chars":158,"error_type":"URLError","http_status":null,"reserved_cost_usd":null,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null},
         {"time_utc":"2026-10-25T18:16:18+00:00","excerpt_chars":500,"error_type":"URLError","http_status":null,"reserved_cost_usd":0.00095,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null},
-        {"time_utc":"2026-10-25T18:42:10+00:00","excerpt_chars":279,"error_type":"URLError","http_status":null,"reserved_cost_usd":0.0009279,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null}
+        {"time_utc":"2026-10-25T18:42:10+00:00","excerpt_chars":279,"error_type":"URLError","http_status":null,"reserved_cost_usd":0.0009279,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null},
+        {"time_utc":"2026-10-25T18:48:26+00:00","excerpt_chars":231,"error_type":"URLError","app_http_status":502,"upstream_http_status":null,"reserved_cost_usd":0.0009231,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null}
       ],
-      "sum_of_recorded_reservations_usd": 0.0018779,
+      "sum_of_recorded_reservations_usd": 0.002801,
       "note": "No HTTP response returned usage. Recorded spend-guard reservations are local protective estimates, not actual usage or billing."
     },
     "browser_screenshots": {"status": "not captured", "reason": "Google Chrome and browser automation are unavailable in this execution environment. HTTP server and endpoints were checked without a browser. Do not label mockups or generated renderings as application screenshots."},
