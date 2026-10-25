@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="340" viewBox="0 0 1280 340" role="img" aria-labelledby="title desc">
+  <title id="title">DAC100 evidence-to-calculation workflow</title>
+  <desc id="desc">Untrusted source text is filtered, extracted into claims by GPT-6 Luna, reviewed by a person, and then an agent can select reviewed claim IDs for one bounded Python calculation tool call and a conditional explanation.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#62857a"/></marker>
+    <style>.h{font:700 18px -apple-system,BlinkMacSystemFont,sans-serif;fill:#1f302c}.p{font:14px -apple-system,BlinkMacSystemFont,sans-serif;fill:#52635e}.s{font:12px -apple-system,BlinkMacSystemFont,sans-serif;fill:#60736c}.step{fill:#fff;stroke:#cfddd7;stroke-width:2}.ai{fill:#e7f4ee;stroke:#91c4ae;stroke-width:2}.tool{fill:#155b4d;stroke:#155b4d;stroke-width:2}.toolh{font:700 18px -apple-system,BlinkMacSystemFont,sans-serif;fill:#fff}.toolp{font:14px -apple-system,BlinkMacSystemFont,sans-serif;fill:#d9eee6}</style>
+  </defs>
+  <rect x="1" y="1" width="1278" height="338" rx="22" fill="#f4f7f4" stroke="#e0e9e4"/>
+  <g transform="translate(30 52)"><rect class="step" width="190" height="190" rx="16"/><text x="18" y="40" class="h">Research excerpt</text><text x="18" y="74" class="p">Untrusted source text</text><text x="18" y="102" class="p">≤ 8,000 characters</text><text x="18" y="145" class="s">No instruction authority</text></g>
+  <path d="M224 147H258" stroke="#62857a" stroke-width="3" marker-end="url(#arrow)"/>
+  <g transform="translate(270 52)"><rect class="ai" width="220" height="190" rx="16"/><text x="18" y="40" class="h">Evidence extractor</text><text x="18" y="74" class="p">GPT-6 Luna · one call</text><text x="18" y="102" class="p">Quotes, value, unit,</text><text x="18" y="124" class="p">condition, uncertainty</text><text x="18" y="158" class="s">No tools or auto-applies</text></g>
+  <path d="M494 147H528" stroke="#62857a" stroke-width="3" marker-end="url(#arrow)"/>
+  <g transform="translate(540 52)"><rect class="step" width="220" height="190" rx="16"/><text x="18" y="40" class="h">Human review</text><text x="18" y="74" class="p">Confirm the quote and</text><text x="18" y="98" class="p">comparable conditions</text><text x="18" y="132" class="p">Select claim IDs</text><text x="18" y="160" class="s">No source → no scenario</text></g>
+  <path d="M764 147H798" stroke="#62857a" stroke-width="3" marker-end="url(#arrow)"/>
+  <g transform="translate(810 52)"><rect class="ai" width="210" height="190" rx="16"/><text x="18" y="40" class="h">Prioritization agent</text><text x="18" y="74" class="p">GPT-6 Luna selects only</text><text x="18" y="98" class="p">approved claim IDs</text><text x="18" y="132" class="p">≤ 2 model requests</text><text x="18" y="160" class="s">No other tools</text></g>
+  <path d="M1024 147H1058" stroke="#62857a" stroke-width="3" marker-end="url(#arrow)"/>
+  <g transform="translate(1070 52)"><rect class="tool" width="180" height="190" rx="16"/><text x="18" y="40" class="toolh">Python tool</text><text x="18" y="76" class="toolp">Validate ranges</text><text x="18" y="104" class="toolp">Calculate costs</text><text x="18" y="132" class="toolp">Compare to $100</text><text x="18" y="164" class="toolp">Conditional results</text></g>
+  <text x="31" y="294" class="s">At most one calculation-tool call per prioritization run · all arithmetic and bounds are enforced by code · lifecycle emissions and durable storage stay explicit.</text>
+</svg>

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>DAC100 — research-to-decision workbench</title>
+  <style>
+    :root{--ink:#20272b;--muted:#68757a;--line:#dce3e1;--paper:#f4f6f3;--card:#fff;--green:#087f68;--deep:#124f48;--mint:#e0f3ec;--pink:#f8ece7;--orange:#ac4e2c;--blue:#315e78;--shadow:0 14px 38px #163c3510;--radius:15px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.52 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.shell{max-width:1420px;margin:0 auto;padding:26px 35px 70px}.topline{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}.wordmark{display:flex;gap:10px;align-items:center;color:var(--deep)}.mark{width:27px;height:27px;border-radius:50% 50% 50% 12%;background:var(--green);transform:rotate(-15deg);position:relative}.mark:after{content:"";position:absolute;left:8px;top:6px;width:10px;height:14px;border:1px solid white;border-radius:80% 0 80% 0;transform:rotate(30deg)}
+    .hero{padding:46px 0 31px;display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:38px;align-items:end}.eyebrow{color:var(--green);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}.hero h1{font-size:clamp(40px,6vw,71px);letter-spacing:-.065em;line-height:.99;margin:10px 0 15px;font-weight:720}.hero p{max-width:760px;color:#4d5b60;font-size:17px;margin:0}.hero-note{border-left:2px solid var(--green);padding-left:16px;color:var(--muted);font-size:12px}.hero-note strong{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}.statusbar{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--pink);border:1px solid #efd4c9;color:#783922;border-radius:9px;font-size:13px;margin-bottom:22px}.statusbar b{white-space:nowrap}.statusbar .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex:none}
+    .layout{display:grid;grid-template-columns:minmax(330px,.83fr) minmax(0,1.5fr);gap:20px;align-items:start}.column{display:grid;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:23px}.card-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:15px}.card h2{font-size:19px;letter-spacing:-.025em;line-height:1.2;margin:0}.card h3{font-size:14px;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin:5px 0 0}.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:5px 9px;color:var(--muted);font-size:11px;white-space:nowrap}.tag.green{background:var(--mint);color:var(--deep);border-color:#bee2d5}.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:var(--muted);margin:20px 0 7px}.grid-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{min-width:0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.field .unit{font-size:10px;color:var(--muted);font-weight:500}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fcfdfb;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#4ba18c;box-shadow:0 0 0 3px #08816b18}.wide{grid-column:1/-1}.input-source{border-top:1px solid #edf0ee;margin-top:11px;padding-top:9px;display:grid;grid-template-columns:1fr 1.3fr;gap:7px}.input-source select,.input-source input{font-size:11px;padding:7px}.source-row{grid-column:1/-1}.details-toggle{border:0;background:none;padding:11px 0 0;color:var(--green);font-size:12px;font-weight:700}.details-toggle:hover{text-decoration:underline}.validation{min-height:20px;color:#9b4027;font-size:12px;margin:7px 0 0}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{background:#f5f8f6;border:1px solid #e8eeeb;border-radius:11px;padding:14px 13px;min-width:0}.metric .label{font-size:10px;line-height:1.3;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-weight:800}.metric .value{font-size:clamp(19px,2.4vw,29px);letter-spacing:-.045em;font-weight:750;margin:7px 0 2px;white-space:nowrap}.metric .unit{font-size:10px;color:var(--muted)}.metric.highlight{background:var(--deep);color:white;border-color:var(--deep)}.metric.highlight .label,.metric.highlight .unit{color:#c1dfd7}.breakdown{margin-top:21px}.bar-row{display:grid;grid-template-columns:minmax(110px,1fr) minmax(90px,1.7fr) 67px;gap:9px;align-items:center;padding:6px 0;font-size:12px}.bar-label{color:#4f5c60}.bar-track{height:8px;background:#ecf0ee;border-radius:99px;overflow:hidden}.bar-fill{height:100%;min-width:2px;background:#298c77;border-radius:99px;transition:width .2s}.bar-fill.secondary{background:#83b4a6}.bar-value{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}.totals{border-top:1px solid var(--line);margin-top:13px;padding-top:11px;display:grid;gap:7px}.total-row{display:flex;justify-content:space-between;gap:10px;font-size:13px}.total-row span:first-child{color:var(--muted)}.total-row b{font-variant-numeric:tabular-nums}.explain{border-left:3px solid #79b9a5;background:#f4faf7;padding:10px 12px;color:#49625a;font-size:11px;margin-top:14px;border-radius:0 7px 7px 0}
+    .scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.slider{padding:11px 12px;background:#f8faf8;border:1px solid #e7ece9;border-radius:10px}.slider-title{display:flex;justify-content:space-between;gap:7px;font-size:12px;font-weight:700}.slider-title output{font-variant-numeric:tabular-nums;color:var(--green)}input[type=range]{width:100%;accent-color:var(--green);margin:10px 0 0}.slider small{display:block;color:var(--muted);font-size:10px}.target-box{margin-top:14px;border-radius:11px;padding:14px;background:#f6f8f7;display:flex;justify-content:space-between;gap:15px;align-items:center}.target-box .big{font-weight:750;font-size:18px;letter-spacing:-.03em}.target-box input{width:82px;border:1px solid var(--line);border-radius:7px;padding:7px}.reach{margin-top:8px;font-weight:750;font-size:13px}.reach.ok{color:var(--green)}.reach.no{color:var(--orange)}.note{font-size:11px;color:var(--muted);margin:9px 0 0}
+    .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:7px;align-items:center;margin-top:17px}.flowbox{text-align:center;background:#f5f8f6;border:1px solid #e5ebe8;border-radius:9px;padding:10px 6px;font-size:10px;line-height:1.35;color:#455452}.flowbox strong{display:block;font-size:11px;color:var(--deep);margin-bottom:3px}.arrow{color:#91a49c;font-size:14px}.question-list{margin:12px 0 0;padding-left:18px;color:#465452;font-size:12px}.question-list li{padding:4px 0}.agent-card textarea{min-height:140px;resize:vertical;line-height:1.5}.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:11px}.primary{border:0;background:var(--green);color:white;border-radius:8px;padding:10px 14px;font-weight:750;font-size:12px}.primary:hover{background:#056e5a}.primary:disabled{opacity:.55;cursor:wait}.secondary{border:1px solid var(--line);background:#fff;color:#43534f;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:700}.tiny{color:var(--muted);font-size:10px}.safety{margin:12px 0 0;background:#f2f7f5;padding:10px;border-radius:8px;color:#4e625c;font-size:11px}.alert{margin:12px 0;padding:11px;border-radius:8px;color:#803e27;background:#fff4ef;border:1px solid #f1d6ca;font-size:12px}.claims{display:grid;gap:10px;margin-top:14px}.claim{border:1px solid var(--line);border-radius:10px;padding:13px;background:#fcfdfc}.claim-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.claim blockquote{font-size:12px;color:#50615b;border-left:2px solid #90c1b2;margin:10px 0;padding:2px 0 2px 10px}.claim p{font-size:12px;margin:7px 0}.claim-meta{font-size:10px;color:var(--muted)}.empty{border:1px dashed #cdd8d3;border-radius:8px;padding:14px;color:var(--muted);font-size:12px;text-align:center;margin-top:12px}.activity{display:grid;gap:7px;max-height:240px;overflow:auto}.activity-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;border-bottom:1px solid #edf0ee;padding:8px 0;font-size:11px}.activity-item:last-child{border-bottom:0}.activity-item strong{display:block;text-transform:capitalize}.activity-item small{color:var(--muted)}.mono{font-variant-numeric:tabular-nums;white-space:nowrap;color:#485a54}.footer{padding:24px 3px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    @media(max-width:980px){.shell{padding:20px}.layout{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero-note{max-width:390px}.layout>.column:first-child{order:2}.layout>.column:last-child{order:1}}@media(max-width:560px){.shell{padding:15px}.hero{padding:35px 0 22px}.metrics{grid-template-columns:1fr}.grid-form,.scenario-grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);text-align:center}.bar-row{grid-template-columns:minmax(100px,1fr) 1fr 58px}.statusbar{align-items:flex-start}.statusbar b{white-space:normal}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="topline"><div class="wordmark"><span class="mark" aria-hidden="true"></span><span>DAC100 / research-to-decision workbench</span></div><span>Technical R&amp;D · Cost &amp; uncertainty</span></div>
+  <header class="hero"><div><div class="eyebrow">Solid-sorbent direct air capture</div><h1>What moves the<br>cost curve?</h1><p>Connect research evidence to auditable calculations, then see which assumptions deserve the next experiment.</p></div><div class="hero-note"><strong id="caseName">Loading case…</strong><span id="currencyYear"></span></div></header>
+  <div id="baselineAlert" class="statusbar" role="status"><span class="dot"></span><b>Illustrative starter values</b><span id="baselineSource">Loading source status…</span></div>
+  <main class="layout">
+    <div class="column">
+      <section class="card" aria-labelledby="assumptionsTitle">
+        <div class="card-head"><div><h2 id="assumptionsTitle">Baseline assumptions</h2><p class="sub">Every input keeps a source type and note. Values start as user assumptions.</p></div><span class="tag">Editable</span></div>
+        <div id="inputForm"></div>
+        <div class="actions"><button class="primary" id="recalc">Recalculate</button><button class="secondary" id="export">Export assumptions JSON</button></div>
+        <div class="validation" id="calcError" aria-live="polite"></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Scenario explorer</h2><p class="sub">Choose conditional improvements within the entered exploratory bounds.</p></div><span class="tag">Python calculation</span></div>
+        <div id="scenarioControls" class="scenario-grid"></div>
+        <div class="target-box"><div><div class="section-label" style="margin:0 0 4px">Target test</div><div class="big">Below $100 per net tonne?</div></div><label class="tiny">Target<br><input id="target" type="number" value="100" min="1" max="100000" step="1" aria-label="Net removal cost target in dollars per tonne"></label></div>
+        <div id="reachStatus" class="reach" aria-live="polite">Waiting for calculation…</div>
+        <p id="boundsNote" class="note"></p>
+      </section>
+    </div>
+    <div class="column">
+      <section class="card" aria-labelledby="resultsTitle">
+        <div class="card-head"><div><h2 id="resultsTitle">Cost and net-removal view</h2><p class="sub">Calculations are deterministic; subsidies are excluded.</p></div><span class="tag green" id="calcTag">Baseline</span></div>
+        <div class="metrics">
+          <div class="metric"><div class="label">Capture cost</div><div class="value" id="captureCost">—</div><div class="unit">USD / gross tonne captured</div></div>
+          <div class="metric"><div class="label">Project cost</div><div class="value" id="projectCost">—</div><div class="unit">+ transport, storage, verification</div></div>
+          <div class="metric highlight"><div class="label">Full net-removal cost</div><div class="value" id="netCost">—</div><div class="unit">USD / net tonne removed</div></div>
+        </div>
+        <div class="breakdown"><div class="section-label">Capture cost breakdown · USD per gross tonne</div><div id="bars"></div></div>
+        <div class="totals" id="totals"></div>
+        <div class="explain" id="boundaryText">Capture cost excludes transport, storage, and verification. Full net-removal cost adds these items, then subtracts lifecycle emissions and any captured CO₂ not durably stored. A positive net balance is required.</div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Research prioritization</h2><p class="sub">Questions come from the largest modeled cost lines and material uncertainties.</p></div><span class="tag">Human-led</span></div>
+        <div id="questions" class="question-list"></div>
+        <div class="flow" aria-label="Evidence to calculation workflow">
+          <div class="flowbox"><strong>Research text</strong>untrusted source</div><span class="arrow">→</span><div class="flowbox"><strong>Evidence extractor</strong>claims + quotes</div><span class="arrow">→</span><div class="flowbox"><strong>Human review</strong>confirm conditions</div><span class="arrow">→</span><div class="flowbox"><strong>Bounded calc tool</strong>Luna selects; Python computes</div>
+        </div>
+      </section>
+      <section class="card agent-card">
+        <div class="card-head"><div><h2>Review a research excerpt</h2><p class="sub">Extract candidate values, evidence quotes, units, conditions, and uncertainties for review.</p></div><span class="tag" id="modelTag">gpt-6-luna</span></div>
+        <div class="field"><label for="sourceTitle">Source or excerpt title</label><input id="sourceTitle" maxlength="200" placeholder="Paper, report, or page title"></div>
+        <div class="field" style="margin-top:10px"><label for="excerpt">Visible research text <span class="unit">· maximum 8,000 characters</span></label><textarea id="excerpt" maxlength="8000" placeholder="Paste a short excerpt. Include enough context to retain units, conditions, and the source's cost boundary."></textarea></div>
+        <div class="actions"><button class="primary" id="analyze">Extract candidate evidence</button><span class="tiny" id="modelStatus">Checking model configuration…</span></div>
+        <div class="safety">The excerpt is treated as untrusted evidence, not instructions. Instruction-like attacks are stopped locally. Extraction has no tools; after you review and approve quoted, condition-matched numeric claims, the prioritization agent can make one bounded calculation-tool call. It cannot change baseline assumptions.</div>
+        <div id="agentError" aria-live="polite"></div><div id="claims" class="claims"><div class="empty">No evidence reviewed in this session.</div></div>
+        <div class="actions"><button class="primary" id="prioritize" disabled>Use selected claims in a scenario tool</button><span class="tiny" id="priorityStatus">Review claims first.</span></div>
+        <div id="assessment"></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Activity and token log</h2><p class="sub">Model usage is separate from DAC cost per tonne.</p></div><button class="secondary" id="refreshActivity">Refresh</button></div>
+        <div id="activity" class="activity"><div class="empty">No activity yet.</div></div>
+      </section>
+    </div>
+  </main>
+  <footer class="footer"><span>DAC100 · Prototype for research prioritization, not an engineering or investment decision system.</span><span>One model request maximum per extraction · calculations use fixed code paths</span></footer>
+</div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const stateKey = 'dac100-state-v1';
+  const reductions = {capex:0,electricity:0,heat:0,sorbent:0};
+  let config, state, latest, latestClaims=[];
+  const sliderDefs = [
+    ['capex','Installed capital reduction','capex_reduction_max','Shares current installed-cost boundary'],
+    ['electricity','Electricity intensity reduction','electricity_intensity_reduction_max','Does not reduce the power price'],
+    ['heat','Process-heat intensity reduction','heat_intensity_reduction_max','Does not reduce the heat price'],
+    ['sorbent','Sorbent / variable O&M reduction','sorbent_cost_reduction_max','No co-benefit or lifetime assumed']
+  ];
+  const groups = [
+    ['Plant and capital',['capacity_t_per_year','capacity_factor','capex_usd','capital_recovery_rate','fixed_om_fraction']],
+    ['Energy and variable costs',['electricity_mwh_per_t','electricity_usd_per_mwh','heat_gj_per_t','heat_usd_per_gj','sorbent_om_usd_per_t']],
+    ['Removal boundary',['transport_storage_usd_per_t','verification_usd_per_t','durable_storage_fraction','electricity_kgco2e_per_mwh','heat_kgco2e_per_gj','other_lifecycle_kgco2e_per_t']]
+  ];
+  const fmt = (n, digits=1) => Number.isFinite(Number(n)) ? Number(n).toLocaleString(undefined,{minimumFractionDigits:digits,maximumFractionDigits:digits}) : '—';
+  const money = (n,digits=0) => '$'+fmt(n,digits);
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const defaultState = (cfg) => ({inputs:Object.fromEntries(Object.entries(cfg.inputs).map(([k,v])=>[k,{value:v.value,kind:v.kind,source:v.source}])), reductions:{...reductions}});
+  function renderForm(){
+    const root=$('inputForm');
+    root.innerHTML=groups.map(([title,keys],gi)=>`<div class="section-label">${esc(title)}</div><div class="grid-form">${keys.map((key)=>{
+      const meta=config.inputs[key], v=state.inputs[key];
+      return `<div class="field"><label for="v-${key}">${esc(meta.label)}<span class="unit"> · ${esc(meta.unit)}</span></label><input id="v-${key}" type="number" step="any" value="${esc(v.value)}" data-input="${key}" aria-label="${esc(meta.label)} in ${esc(meta.unit)}"><div class="input-source"><select data-kind="${key}" aria-label="Source kind for ${esc(meta.label)}">${config.source_kinds.map(kind=>`<option ${kind===v.kind?'selected':''}>${esc(kind)}</option>`).join('')}</select><input class="source-row" data-source="${key}" value="${esc(v.source)}" maxlength="500" aria-label="Source note for ${esc(meta.label)}" placeholder="Citation, page, condition, or why unknown"></div></div>`
+    }).join('')}</div>`).join('');
+    root.querySelectorAll('[data-input]').forEach(el=>el.addEventListener('change',()=>{state.inputs[el.dataset.input].value=Number(el.value);saveState();calculateNow()}));
+    root.querySelectorAll('[data-kind]').forEach(el=>el.addEventListener('change',()=>{state.inputs[el.dataset.kind].kind=el.value;saveState()}));
+    root.querySelectorAll('[data-source]').forEach(el=>el.addEventListener('change',()=>{state.inputs[el.dataset.source].source=el.value.trim();saveState()}));
+  }
+  function renderSliders(){
+    $('scenarioControls').innerHTML=sliderDefs.map(([key,label,bound,note])=>{
+      const max=config.limits[bound];
+      return `<label class="slider"><span class="slider-title"><span>${esc(label)}</span><output id="out-${key}">0%</output></span><input type="range" min="0" max="${max}" step="0.01" value="0" data-reduction="${key}" aria-label="${esc(label)}"><small>${esc(note)} · exploratory cap ${fmt(max*100,0)}%</small></label>`
+    }).join('');
+    document.querySelectorAll('[data-reduction]').forEach(el=>el.addEventListener('input',()=>{reductions[el.dataset.reduction]=Number(el.value);state.reductions={...reductions};$('out-'+el.dataset.reduction).value=fmt(Number(el.value)*100,0)+'%';saveState();calculateNow()}));
+    $('target').addEventListener('change',calculateNow);
+  }
+  async function calculateNow(){
+    if(!config) return;
+    const inputs={};
+    for(const [key,v] of Object.entries(state.inputs)) inputs[key]=Number(v.value);
+    $('calcError').textContent='';$('recalc').disabled=true;
+    try{
+      const response=await fetch('/api/calculate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({inputs,improvements:{...reductions},target_usd_per_net_t:Number($('target').value||100)})});
+      const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Calculation failed.');
+      latest=payload;renderResult(payload);refreshActivity();
+    }catch(error){$('calcError').textContent=error.message;$('reachStatus').textContent='Calculation needs valid inputs.';}
+    finally{$('recalc').disabled=false;}
+  }
+  function renderResult(r){
+    $('captureCost').textContent=money(r.capture_cost_usd_per_gross_t);
+    $('projectCost').textContent=money(r.full_project_usd_per_gross_t);
+    $('netCost').textContent=money(r.full_net_removal_usd_per_net_t);
+    $('calcTag').textContent=Object.values(r.improvements).some(x=>x>0)?'Conditional scenario':'Baseline';
+    const rows=Object.entries(r.capture_breakdown_usd_per_gross_t), max=Math.max(...rows.map(x=>x[1]),1);
+    $('bars').innerHTML=rows.map(([name,value])=>`<div class="bar-row"><span class="bar-label">${esc(name)}</span><span class="bar-track"><span class="bar-fill ${name==='Sorbent and variable O&M'?'secondary':''}" style="display:block;width:${Math.max(1,value/max*100)}%"></span></span><span class="bar-value">${money(value)}</span></div>`).join('');
+    $('totals').innerHTML=`<div class="total-row"><span>Lifecycle emissions</span><b>${fmt(r.lifecycle_emissions_tco2e_per_gross_t,3)} tCO₂e / gross t</b></div><div class="total-row"><span>Durably stored</span><b>${fmt(r.durable_storage_fraction*100,1)}% of gross capture</b></div><div class="total-row"><span>Net removed</span><b>${fmt(r.net_removal_fraction*100,1)}% · ${fmt(r.net_tonnes_per_year,0)} t/year</b></div><div class="total-row"><span>Post-capture costs</span><b>${money(Object.values(r.post_capture_usd_per_gross_t).reduce((a,b)=>a+b,0))} / gross t</b></div>`;
+    const search=r.target_search;
+    $('reachStatus').className='reach '+(search.reachable_within_entered_ranges?'ok':'no');
+    $('reachStatus').textContent=search.reachable_within_entered_ranges?`Within entered ranges, arithmetic reaches ${money(search.all_bounds_scenario)} per net tonne at the maximum reductions.`:`Not reachable within these entered bounds: the maximum-reduction case is ${money(search.all_bounds_scenario)} per net tonne.`;
+    $('boundsNote').textContent=search.qualification;
+    $('questions').innerHTML=r.investigation_questions.map(q=>`<li>${esc(q)}</li>`).join('');
+  }
+  function saveState(){try{localStorage.setItem(stateKey,JSON.stringify(state))}catch(_){}}
+  function exportState(){
+    const obj={case:config.case,exported_at:new Date().toISOString(),currency_year:config.case.currency_year,inputs:state.inputs,improvements:reductions,scenario_bounds:config.limits,scenario_bounds_note:config.case.scenario_bounds_note,latest_calculation:latest};
+    const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='dac100-assumptions.json';a.click();URL.revokeObjectURL(a.href);
+  }
+  function renderClaims(result){
+    latestClaims=result.claims||[];
+    $('claims').innerHTML=latestClaims.length?latestClaims.map((c,i)=>`<article class="claim"><div class="claim-top"><strong>${esc(c.input_id||'unknown')} · ${esc(c.claim||'Candidate claim')}</strong><span class="tag">${esc(c.classification||'Unknown')}</span></div>${c.evidence_quote?`<blockquote>“${esc(c.evidence_quote)}”</blockquote>`:''}<p><b>Value:</b> ${c.value===null||c.value===undefined?'not explicit':esc(c.value)} ${esc(c.unit||'')} · <b>Confidence:</b> ${esc(c.confidence||'unknown')}</p><div class="claim-meta"><b>Condition:</b> ${esc(c.condition||'not stated in excerpt')}</div>${c.value!==null&&c.value!==undefined?`<label class="claim-meta" style="display:block;margin-top:10px"><input type="checkbox" data-pick="${i}"> I reviewed the quote and confirm these units and study conditions are comparable to the current baseline.</label>`:''}</article>`).join(''):'<div class="empty">No supported input claims found. Review the reported uncertainties below.</div>';
+    if(result.uncertainties?.length)$('claims').insertAdjacentHTML('beforeend',`<div class="claim"><strong>Open uncertainties</strong><ul>${result.uncertainties.slice(0,5).map(x=>`<li>${esc(typeof x==='string'?x:JSON.stringify(x))}</li>`).join('')}</ul><div class="claim-meta">${esc(result.note||'Candidate evidence only; check the source before use.')}</div></div>`);
+    $('claims').querySelectorAll('[data-pick]').forEach(box=>box.addEventListener('change',()=>{$('prioritize').disabled=!$('claims').querySelector('[data-pick]:checked');}));
+    $('prioritize').disabled=!$('claims').querySelector('[data-pick]');
+  }
+  async function analyze(){
+    $('agentError').innerHTML='';$('claims').innerHTML='';$('analyze').disabled=true;$('analyze').textContent='Reviewing…';
+    $('assessment').innerHTML='';$('prioritize').disabled=true;latestClaims=[];
+    try{
+      const response=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:$('sourceTitle').value,excerpt:$('excerpt').value})});
+      const payload=await response.json();if(!response.ok){$('agentError').innerHTML=`<div class="alert">${esc(payload.error||'Evidence extraction failed.')}</div>`;if(payload.blocked){await refreshActivity();return}throw new Error(payload.error||'Evidence extraction failed.');}
+      const result=payload.result, usage=payload.usage;
+      renderClaims(result);
+      const u=usage||{};$('modelStatus').textContent=`${u.model||'Model'} · ${u.input_tokens??'—'} in / ${u.cached_input_tokens??'—'} cached / ${u.output_tokens??'—'} out · API ${u.api_cost_usd==null?'not priced':money(u.api_cost_usd,4)}`;
+      await refreshActivity();
+    }catch(error){$('agentError').innerHTML=`<div class="alert">${esc(error.message)}</div>`;}
+    finally{$('analyze').disabled=false;$('analyze').textContent='Extract candidate evidence';}
+  }
+  async function prioritize(){
+    const selected=[...$('claims').querySelectorAll('[data-pick]:checked')].map(box=>({...latestClaims[Number(box.dataset.pick)],human_reviewed:true}));
+    if(!selected.length){$('agentError').innerHTML='<div class="alert">Select at least one candidate and confirm that its source conditions match this baseline.</div>';return;}
+    $('agentError').innerHTML='';$('assessment').innerHTML='';$('prioritize').disabled=true;$('prioritize').textContent='Calling calculator tool…';$('priorityStatus').textContent='One bounded agent run; up to two model requests.';
+    try{
+      const inputs=Object.fromEntries(Object.entries(state.inputs).map(([k,v])=>[k,Number(v.value)]));
+      const response=await fetch('/api/prioritize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({inputs,claims:selected})});
+      const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Evidence-to-calculation handoff failed.');
+      const comparison=payload.comparison,base=comparison.baseline,scenario=comparison.scenario,u=payload.usage||{};
+      $('assessment').innerHTML=`<article class="claim"><div class="claim-top"><strong>Agent result · ${esc(u.tool_calls??1)} calculation-tool call</strong><span class="tag green">${esc(u.model||'gpt-6-luna')}</span></div><p>${esc(payload.explanation).replaceAll('\n','<br>')}</p><div class="totals"><div class="total-row"><span>Baseline full net cost</span><b>${money(base.full_net_removal_usd_per_net_t)} / net t</b></div><div class="total-row"><span>Evidence-supported scenario</span><b>${money(scenario.full_net_removal_usd_per_net_t)} / net t</b></div><div class="total-row"><span>Capture cost · scenario</span><b>${money(scenario.capture_cost_usd_per_gross_t)} / gross t</b></div></div><div class="claim-meta" style="margin-top:9px"><b>Tool selection reason:</b> ${esc(comparison.model_selection_reason||'Not returned')}</div><p class="claim-meta">The Python result above is authoritative. The model explanation is a summary and remains conditional on comparability, permanence, lifecycle boundaries, and compatibility of improvements.</p></article>`;
+      Object.assign(reductions,scenario.improvements);state.reductions={...reductions};saveState();
+      document.querySelectorAll('[data-reduction]').forEach(el=>{el.value=reductions[el.dataset.reduction];$('out-'+el.dataset.reduction).value=fmt(Number(el.value)*100,0)+'%'});
+      $('modelStatus').textContent=`${u.model||'Model'} · ${u.model_requests??'—'} calls · ${u.input_tokens??'—'} in / ${u.cached_input_tokens??'—'} cached / ${u.output_tokens??'—'} out · API ${u.api_cost_usd==null?'not priced':money(u.api_cost_usd,4)}`;
+      $('priorityStatus').textContent='Calculation completed in code; the model proposed the evidence selection.';
+      await calculateNow();await refreshActivity();
+    }catch(error){$('agentError').innerHTML=`<div class="alert">${esc(error.message)}</div>`;$('priorityStatus').textContent='No model-supported scenario was applied.';await refreshActivity();}
+    finally{$('prioritize').disabled=!$('claims').querySelector('[data-pick]:checked');$('prioritize').textContent='Use selected claims in a scenario tool';}
+  }
+  async function refreshActivity(){
+    try{
+      const response=await fetch('/api/activity');const data=await response.json();const events=data.events||[];
+      $('activity').innerHTML=events.length?events.slice().reverse().map(e=>{
+        const label=(e.event||'activity').replaceAll('_',' ');let detail='';
+        if(e.event==='evidence_extraction_success'||e.event==='evidence_extraction_invalid_output'||e.event==='evidence_agent_success')detail=`${e.model_requests?e.model_requests+' calls · ':''}${e.input_tokens??'—'} in / ${e.cached_input_tokens??'—'} cached / ${e.output_tokens??'—'} out · ${e.api_cost_usd==null?'cost n/a':money(e.api_cost_usd,4)}`;
+        else if(e.event==='evidence_extraction_error'||e.event==='evidence_agent_error')detail=`No completed usage · reserve ${money(e.reserved_cost_usd||0,4)}`;
+        else if(e.event==='prompt_injection_rejected')detail='Blocked before API call';
+        else if(e.error_type)detail=`${e.error_type} · no complete token report`;
+        else if(e.event==='ai_spend_limit_rejected')detail='Blocked before API call';
+        else if(e.event==='calculation')detail=`capture ${money(e.capture_cost_usd_per_gross_t)} / gross t · net ${money(e.full_net_removal_usd_per_net_t)} / net t`;
+        else if(e.http_status)detail=`HTTP ${e.http_status}`;
+        return `<div class="activity-item"><div><strong>${esc(label)}</strong><small>${esc(e.time_utc||'')}</small></div><span class="mono">${esc(detail)}</span></div>`;
+      }).join(''):'<div class="empty">No activity yet. Calculations and model calls will appear here.</div>';
+    }catch(_){$('activity').innerHTML='<div class="empty">Activity log is not available.</div>'}
+  }
+  async function init(){
+    try{
+      config=await (await fetch('/api/config')).json();
+      $('caseName').textContent=config.case.name;$('currencyYear').textContent=`Cost basis: ${config.case.currency_year}`;$('baselineSource').textContent=config.case.source;
+      state=defaultState(config);try{const saved=JSON.parse(localStorage.getItem(stateKey)||'null');if(saved?.inputs&&Object.keys(saved.inputs).length===Object.keys(config.inputs).length)state=saved}catch(_){}
+      Object.assign(reductions,state.reductions||{});
+      renderForm();renderSliders();
+      document.querySelectorAll('[data-reduction]').forEach(el=>{el.value=reductions[el.dataset.reduction]||0;$('out-'+el.dataset.reduction).value=fmt(Number(el.value)*100,0)+'%'});
+      $('boundsNote').textContent=config.case.scenario_bounds_note;
+      $('modelStatus').textContent=config.model_configured?'Course model configured; extraction is on demand.':'No course key detected. Calculator works; add PORTKEY_API_KEY for AI extraction.';
+      $('modelTag').textContent=config.model;
+      $('recalc').addEventListener('click',calculateNow);$('export').addEventListener('click',exportState);$('analyze').addEventListener('click',analyze);$('prioritize').addEventListener('click',prioritize);$('refreshActivity').addEventListener('click',refreshActivity);
+      await calculateNow();await refreshActivity();
+    }catch(error){$('caseName').textContent='Could not load DAC100';$('calcError').textContent=error.message}
+  }
+  init();
+})();
+</script>
+</body>
+</html>

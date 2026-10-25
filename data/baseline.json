@@ -1,0 +1,31 @@
+{
+  "case_name": "Illustrative solid-sorbent DAC starter case",
+  "baseline_status": "illustrative_user_assumptions",
+  "source": "No published case has been transcribed yet. Every value below is an unverified starter assumption; this file is not a NETL reproduction.",
+  "currency_year": "2024 USD (illustrative; replace/verify)",
+  "inputs": {
+    "capacity_t_per_year": {"label": "Nameplate capacity", "value": 1000000, "unit": "gross tCO2/year", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "capacity_factor": {"label": "Capacity factor", "value": 0.9, "unit": "fraction", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "capex_usd": {"label": "Installed capital cost", "value": 550000000, "unit": "USD", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "capital_recovery_rate": {"label": "Capital recovery rate", "value": 0.1, "unit": "fraction/year", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "fixed_om_fraction": {"label": "Fixed O&M as share of capital cost", "value": 0.06, "unit": "fraction/year", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "electricity_mwh_per_t": {"label": "Electricity intensity", "value": 0.5, "unit": "MWh/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "electricity_usd_per_mwh": {"label": "Electricity price", "value": 100, "unit": "USD/MWh", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "heat_gj_per_t": {"label": "Process heat intensity", "value": 4, "unit": "GJ/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "heat_usd_per_gj": {"label": "Process heat price", "value": 8, "unit": "USD/GJ", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "sorbent_om_usd_per_t": {"label": "Sorbent replacement and other variable O&M", "value": 25, "unit": "USD/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
+    "transport_storage_usd_per_t": {"label": "Transport and storage", "value": 20, "unit": "USD/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; site-specific value not supplied."},
+    "verification_usd_per_t": {"label": "Measurement, reporting, and verification", "value": 2, "unit": "USD/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; site-specific value not supplied."},
+    "electricity_kgco2e_per_mwh": {"label": "Electricity lifecycle emissions intensity", "value": 300, "unit": "kgCO2e/MWh", "kind": "User assumption", "source": "Illustrative starter value; grid/location not specified."},
+    "heat_kgco2e_per_gj": {"label": "Heat lifecycle emissions intensity", "value": 10, "unit": "kgCO2e/GJ", "kind": "User assumption", "source": "Illustrative starter value; heat source not specified."},
+    "other_lifecycle_kgco2e_per_t": {"label": "Other lifecycle emissions", "value": 10, "unit": "kgCO2e/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; lifecycle boundary not verified."},
+    "durable_storage_fraction": {"label": "Gross capture durably stored", "value": 1.0, "unit": "fraction", "kind": "User assumption", "source": "Illustrative starter value assumes all captured CO2 is permanently stored; no project-specific evidence supplied."}
+  },
+  "scenario_bounds": {
+    "capex_reduction_max": 0.3,
+    "electricity_intensity_reduction_max": 0.3,
+    "heat_intensity_reduction_max": 0.3,
+    "sorbent_cost_reduction_max": 0.25
+  },
+  "scenario_bounds_note": "Exploratory bounds are analyst-set and illustrative, not validated technical limits. Stacked improvements are not assumed to be compatible."
+}
