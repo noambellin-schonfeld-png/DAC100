@@ -1,6 +1,6 @@
 {
   "check_date_local": "2026-10-25",
-  "scope": "Current Case 0B input/reconciliation checked against extracted NETL PDF pages and code calculation. The public repository was cloned fresh; its README startup, baseline HTTP route, selected validation/injection guards, and parent-folder .env setup passed. CarbonPlan calculator/explainer pages were inspected for the alternative audit. Visual browser rendering and successful live-model use remain unverified.",
+  "scope": "Current Case 0B input/reconciliation checked against extracted NETL PDF pages and code calculation. The public repository was cloned fresh; its README startup, baseline HTTP route, selected validation/injection guards, and parent-folder .env setup passed. Genuine dashboard and prompt-injection browser screenshots were captured and embedded in both HTML deliverables. Full print/presentation checks and successful live-model use remain unverified.",
   "results": {
     "python_syntax": {"status": "passed", "command": "python3 -m py_compile app.py"},
     "browser_script_syntax": {"status": "passed", "method": "Extracted the inline JavaScript from static/index.html and passed it to node --check"},
@@ -73,7 +73,7 @@
       "sum_of_recorded_reservations_usd": 0.002801,
       "note": "No HTTP response returned usage. Recorded spend-guard reservations are local protective estimates, not actual usage or billing."
     },
-    "browser_screenshots": {"status": "genuine_injection_rejection_captured", "files": ["assets/injection-rejected.jpg"], "capture_date_local": "2026-10-25", "observed_message": "This excerpt contains instruction-like text ... It was stopped before any API request.", "activity_log": {"time_utc": "2026-10-25T19:10:48+00:00", "event": "prompt_injection_rejected", "api_called": false}, "remaining": ["baseline dashboard screenshot", "successful Luna extraction/tool-flow screenshot", "print pagination", "slide arrow/fullscreen interaction"]},
+    "browser_screenshots": {"status": "genuine_dashboard_and_injection_rejection_captured", "files": ["assets/dashboard.jpg", "assets/injection-rejected.jpg"], "capture_date_local": "2026-10-25", "dashboard_observed": "Case 0B source values, published baseline status, cost breakdown, and capture/project/NETL-boundary cost cards.", "injection_observed_message": "This excerpt contains instruction-like text ... It was stopped before any API request.", "activity_log": {"time_utc": "2026-10-25T19:10:48+00:00", "event": "prompt_injection_rejected", "api_called": false}, "embedded_in": ["report.html", "slides.html"], "remaining": ["successful Luna extraction/tool-flow screenshot", "print pagination", "slide arrow/fullscreen interaction"]},
     "practitioner_trial": {"status": "unavailable", "note": "User confirmed no DAC practitioner is available before the deadline."}
   }
 }
