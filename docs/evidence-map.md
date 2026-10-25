@@ -20,13 +20,13 @@
 - Source: Valentine & Zoelle (2022), DOE/NETL-2021/2865. Main cost result: Exhibit 5-16, printed p. 50 / PDF viewer p. 62. Supporting §§3.5–3.6 and Exhibits 5-4, 5-7, 5-13, 5-14.
 - Annual DAC gross capture: 113,900 tCO₂/year; residual NGCC stack emissions: 13,900 t/year; NETL-boundary net atmospheric removal: 100,000 t/year.
 - Total CO₂ product sent to T&S: 238,990 t/year (113,900 DAC + 125,090 NGCC flue-gas capture).
-- Annual costs at the Case 0B point: $34.944m capital charges (printed Exhibit 5-13 TASC $494.258m × §3.6 FCR 0.0707), $15.343999m fixed O&M, $6.143693m variable O&M, $11.399160m fuel, and $2.389900m T&S.
+- Annual costs at the Case 0B point: $34.944m capital charges (printed Exhibit 5-13 TASC $494.258m × §3.6 FCR 0.0707), $15.343999m fixed O&M, $6.143693m variable O&M, $11.399160m fuel, and $2.390000m T&S in the Exhibit 5-16 2019-dollar basis.
 - Formula in code: `(annual capital + fixed O&M + variable O&M + fuel + T&S + entered verification cost) / modeled net atmospheric tonnes`. Capture-only cost excludes T&S and verification. DAC100 uses actual 85%-CF annual outputs and annual variable/fuel values directly; no second capacity-factor multiplication.
 - One-at-a-time sensitivity function evaluates each cost lever separately at its analyst-set maximum and reports the resulting NETL-boundary cost and savings. It holds output and boundary fixed; it is not an engineering compatibility analysis.
 - Reproduction from printed support values: capture $595.53 / DAC gross t; project $616.51 / DAC gross t including T&S; $702.21 / NETL-boundary net atmospheric t; $293.82 / total plant CO₂ product t. These are within $0.2/t of Exhibit 5-16's $595.7, $616.7, $702.4, $293.9.
 - Capital reconciliation: printed Exhibit 5-13 TASC $494.258m × FCR 0.0707 gives $34.944m annual charges / $349.44 per net t. Exhibit 5-16's rounded capital COC row is $349.6, a $0.16/t difference. DAC100 applies the published TASC and FCR formula and documents the discrepancy; it does not use the published COC as a back-solved input.
 - Exhibit 5-4/5-7 residual stack emissions differ by one tonne/year due rounding (13,900 versus 13,901); the calculation follows Exhibit 5-4's net-flow reconciliation.
-- §3.5 labels its Midwest T&S assumption as $10/t in 2018 dollars; Exhibit 5-16 reports COC in 2019 dollars. DAC100 uses the Exhibit 5-16 $23.9/net-t line converted to the annual total; no undocumented inflation adjustment is invented.
+- §3.5 labels its Midwest T&S assumption as $10/t in 2018 dollars; Exhibit 5-16 reports COC in 2019 dollars. DAC100 uses the rounded Exhibit 5-16 $23.9/net-t line to derive $2.39m/y in 2019 dollars. Applying §3.5's $10 to 238,990 t/y gives $2.3899m in 2018 dollars, $100/y lower before conversion. No undocumented inflation adjustment is invented.
 - NETL's net boundary is a modeled plant balance, not a complete LCA. Separate verification/MRV, construction/supply-chain emissions, leakage, and independently established durable storage are absent. DAC100 labels the $702.21 result “NETL-boundary modeled cost”; complete lifecycle net-removal cost is unquantified.
 
 ## Remaining evidence to collect

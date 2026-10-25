@@ -127,7 +127,7 @@
   <p>The app reproduces a published modeled result while keeping capture, transport/storage, and the denominator visible. This is evidence about a NETL study case, not evidence that DAC100 itself saved a user time or improved a decision.</p>
   <table class="table"><tr><th>Metric</th><th class="num">DAC100 reproduction</th><th>Evidence and interpretation</th></tr>
     <tr><td>Capture cost</td><td class="num">$595.53 / gross DAC t</td><td>FCR × TASC + fixed O&amp;M + variable O&amp;M + fuel, divided by 113,900 t/year gross DAC output.</td></tr>
-    <tr><td>Transport and storage</td><td class="num">$20.98 / gross DAC t</td><td>$2.3899m/year T&amp;S cost applied to 238,990 t/year of combined CO₂ product.</td></tr>
+    <tr><td>Transport and storage</td><td class="num">$20.98 / gross DAC t</td><td>$2.390m/year in the published 2019-dollar basis; $2.3899m is the separate 2018-dollar calculation before conversion.</td></tr>
     <tr><td>Project cost including T&amp;S</td><td class="num">$616.51 / gross DAC t</td><td>Capture + NETL T&amp;S. Separate verification/MRV is unknown and excluded.</td></tr>
     <tr><td>Residual NGCC emissions</td><td class="num">13,900 t/year</td><td>Exhibit 5-4 modeled output. Exhibit 5-7 rounds to 13,901.</td></tr>
     <tr><td>Net atmospheric removal</td><td class="num">100,000 t/year</td><td>113,900 gross DAC capture less 13,900 residual emissions at NETL's 85% CF case.</td></tr>
@@ -167,7 +167,7 @@
     <tr><td>Fixed O&amp;M</td><td class="num">$15,343,999</td><td>2019 USD/year · Exhibit 5-14</td></tr>
     <tr><td>Variable O&amp;M</td><td class="num">$6,143,693</td><td>2019 USD/year at 85% CF · Exhibit 5-14</td></tr>
     <tr><td>Fuel</td><td class="num">$11,399,160</td><td>2019 USD/year at 85% CF · Exhibit 5-14</td></tr>
-    <tr><td>Transport and storage</td><td class="num">$2,389,900</td><td>2019 USD/year · Exhibit 5-16 T&amp;S line × 100,000 net t; corresponds to $10 × 238,990 total-product tonnes</td></tr>
+    <tr><td>Transport and storage</td><td class="num">$2,390,000</td><td>2019 USD/year · rounded Exhibit 5-16 line $23.9/net t × 100,000 net t</td></tr>
     <tr><td>Separate verification/MRV cost</td><td class="num">Not reported</td><td>Unknown; entered zero only to exclude from source reproduction, not to claim zero cost</td></tr>
     <tr><td>Durable storage fraction</td><td class="num">100%</td><td>User assumption for conditional arithmetic; no quantified leakage/permanence evidence in Case 0B</td></tr></table>
   <p class="small">Capture cost excludes T&amp;S and separate MRV. NETL-boundary cost includes the T&amp;S assumption and subtracts Case 0B residual NGCC emissions from gross DAC capture. It omits complete lifecycle emissions and cannot be interpreted as verified durable-removal cost.</p>
@@ -185,9 +185,28 @@
     <tr><td>CarbonPlan DAC calculator</td><td>Named by the assignment as the closest alternative; current product URL, feature audit, and date remain to be verified</td></tr>
     <tr><td>GPT-6 Luna price sheet</td><td>Course sample at `Lecture 11/mult_agent_hp/backend/pricing.py`: $0.10/M uncached input, $0.01/M cached input, $0.50/M output. Used as a rate assumption only.</td></tr>
     <tr><td>Portkey connection pattern</td><td>Verified in course examples under `Lecture 12/froggy_labubu_prompt_inj/backend/config.py` and `Lecture 13/yale_som_virtual/backend/config.py`: `https://api.portkey.ai/v1`, `gpt-6-luna`, OpenAI provider. Actual DAC100 call did not complete.</td></tr>
-    <tr><td>Local development checks</td><td>`evidence/development-smoke-check.json` must be refreshed after the source-model refactor. This report identifies direct Python checks separately from HTTP/UI tests, the mocked model protocol, and the earlier failed Portkey connection.</td></tr></table>
+    <tr><td>Local development checks</td><td>`evidence/development-smoke-check.json` records direct Python syntax, calculation, validation, and environment-priority checks. HTTP/browser checks remain unavailable in this sandbox; the Portkey attempt returned a connection-level error without token usage.</td></tr></table>
   <div class="warning"><b>Finalization check:</b> the source-backed calculation is ready for review. Successful model usage/tokens, genuine app screenshots, fresh-clone and browser/HTML display checks, verified CarbonPlan comparison, and public repository URL remain to be collected before final Canvas submission.</div>
   <div class="folio"><span>DAC100 · Noam Bellin-Schonfeld</span><span>Appendix B · 11</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Appendix · NETL source reconciliation</div><h2>Line items reproduce across three denominators.</h2>
+  <p>NETL Exhibit 5-16 reports COC against three distinct annual quantities. DAC100 divides the same annual cost rows by the stated net DAC flow, gross DAC capture, or total captured product. Values below are calculated from printed annual inputs and shown as <b>DAC100 estimate / NETL published value</b>, USD per tonne; NETL values are rounded to one decimal.</p>
+  <table class="table"><tr><th>Component</th><th>DACnet<br>100,000 t/y</th><th>DACgross<br>113,900 t/y</th><th>Plantgross<br>238,990 t/y</th></tr>
+    <tr><td>Capital</td><td class="num">$349.44 / $349.6</td><td class="num">$306.80 / $307.0</td><td class="num">$146.22 / $146.3</td></tr>
+    <tr><td>Fixed O&amp;M</td><td class="num">$153.44 / $153.4</td><td class="num">$134.71 / $134.7</td><td class="num">$64.20 / $64.2</td></tr>
+    <tr><td>Variable O&amp;M</td><td class="num">$61.44 / $61.4</td><td class="num">$53.94 / $53.9</td><td class="num">$25.71 / $25.7</td></tr>
+    <tr><td>Fuel</td><td class="num">$113.99 / $114.0</td><td class="num">$100.08 / $100.1</td><td class="num">$47.70 / $47.7</td></tr>
+    <tr><td>Subtotal, excluding T&amp;S</td><td class="num">$678.31 / $678.5</td><td class="num">$595.53 / $595.7</td><td class="num">$283.82 / $283.9</td></tr>
+    <tr><td>CO₂ T&amp;S</td><td class="num">$23.90 / $23.9</td><td class="num">$20.98 / $21.0</td><td class="num">$10.00 / $10.0</td></tr>
+    <tr><td>Total, including T&amp;S</td><td class="num">$702.21 / $702.4</td><td class="num">$616.51 / $616.7</td><td class="num">$293.82 / $293.9</td></tr></table>
+  <div class="formula">Capital charge = $494,258,000 TASC × 0.0707 FCR = $34,944,040.60/y<br>DACnet = 113,900 gross DAC − 13,900 residual NGCC = 100,000 net t/y<br>Plantgross = 113,900 DAC product + 125,090 NGCC captured product = 238,990 t/y<br>Annual total including T&amp;S = $70,220,892.60/y</div>
+  <p>Section 3.6 applies capacity factor to variable O&amp;M and fuel stated at 100% CF and to the matching annual CO₂ flow. Exhibit 5-14 gives annual costs for its stated 85% CF, and Exhibit 5-4 gives annual flows for the same case. DAC100 uses those annual amounts directly; applying 0.85 again would double-adjust them.</p>
+  <p>Exhibit 5-16 is labeled 2019 dollars. Its rounded $23.9/net-t T&amp;S entry gives $2,390,000/y when multiplied by 100,000 net t/y; DAC100 uses that published-table basis. Section 3.5's $10/t × 238,990 t/y gives $2,389,900 in 2018 dollars, $100/y lower before any dollar-year conversion. The report does not show a conversion. DAC100 follows the 2019-dollar table and records the source-year and rounding ambiguity rather than adding an unsupported adjustment.</p>
+  <p>The direct capital calculation is $349.44/net t versus Exhibit 5-16's $349.6. The source table rounds cost lines and totals independently, and its printed TASC/FCR are rounded. Applying printed values yields total differences of $0.08–$0.19/t from the three published totals. Exhibit 5-7 also rounds residual emissions to 13,901 t/y, one tonne higher than Exhibit 5-4; DAC100 follows Exhibit 5-4's flow reconciliation.</p>
+  <p class="small">Source: Valentine &amp; Zoelle (2022), DOE/NETL-2021/2865, §§3.5–3.6; Exhibits 3-7, 5-4, 5-7, 5-13, 5-14, and 5-16. See `docs/case0b-reconciliation.md` for the full audit note. All outputs are modeled estimates, not a current-dollar commercial quote, full LCA, or verified durable-removal cost.</p>
+  <div class="folio"><span>DAC100 · Noam Bellin-Schonfeld</span><span>Appendix C · 12</span></div>
 </section>
 </main>
 </body>

@@ -65,10 +65,10 @@
     },
     "transport_storage_annual_usd": {
       "label": "CO2 transport and storage",
-      "value": 2389900,
+      "value": 2390000,
       "unit": "2019 USD/year",
       "kind": "Published modeling assumption",
-      "source": "Derived from the Exhibit 5-16 DACnet T&S line ($23.9/net t × 100,000 net t/year); consistent with §3.5's Midwest $10/t assumption applied to 238,990 t/year total CO2 product. §3.5 labels its underlying regional values 2018 USD; Exhibit 5-16 reports the COC table in 2019 dollars."
+      "source": "Uses Exhibit 5-16's published DACnet T&S line of $23.9/net t × 100,000 net t/year = $2,390,000/year in its reported 2019-dollar table (the line is rounded to one decimal). For comparison, §3.5's $10/t Midwest assumption × 238,990 total-product t/year = $2,389,900 in 2018 dollars, $100/year lower before any dollar-year conversion. NETL does not show a conversion here; DAC100 follows the 2019-dollar table and does not invent an adjustment."
     },
     "verification_annual_usd": {
       "label": "Separate verification / MRV cost entered",

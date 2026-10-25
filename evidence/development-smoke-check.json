@@ -12,14 +12,14 @@
       "annual_net_atmospheric_removal_tonnes": 100000,
       "annual_total_co2_product_tonnes": 238990,
       "capture_cost_usd_per_gross_dac_tonne": 595.53022475856,
-      "project_cost_including_ts_usd_per_gross_dac_tonne": 616.5126654960491,
-      "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2079259999999,
-      "plant_gross_cost_usd_per_total_product_tonne": 293.8231415540399,
-      "max_cost_reduction_scenario_usd_per_net_tonne": 528.5302537,
+      "project_cost_including_ts_usd_per_gross_dac_tonne": 616.5135434591748,
+      "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2089259999999,
+      "plant_gross_cost_usd_per_total_product_tonne": 293.82355998158914,
+      "max_cost_reduction_scenario_usd_per_net_tonne": 528.5312537,
       "one_at_a_time_sensitivity_usd_savings_per_net_tonne": {"capital_30_percent": 104.8321218, "fixed_om_20_percent": 30.687998, "fuel_20_percent": 22.79832, "variable_om_25_percent": 15.3592325},
       "target_100_reachable_within_analyst_bounds": false,
       "capacity_factor_note": "Annual flows and variable/fuel costs already represent 85% CF. The code does not apply the capacity factor again.",
-      "source_comparison": "Within $0.2/t of Exhibit 5-16's rounded totals. Capital uses printed Exhibit 5-13 TASC multiplied by §3.6 FCR; Exhibit 5-16 capital line differs by $0.16/net t."
+      "source_comparison": "Within $0.2/t of Exhibit 5-16's rounded totals. Capital uses printed Exhibit 5-13 TASC multiplied by §3.6 FCR; Exhibit 5-16 capital line differs by $0.16/net t. T&S uses the 2019-dollar Exhibit 5-16 rounded line ($2.390m/y); §3.5's $10 × combined product is $2.3899m in stated 2018 dollars, $100/y lower before conversion."
     },
     "out_of_range_storage_fraction": {"status": "rejected", "input": 1.2, "exception": "ValueError", "message": "Assumed durably stored share must be between 0 and 1."},
     "prompt_injection_attempt": {
