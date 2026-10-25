@@ -1,6 +1,6 @@
 {
   "check_date_local": "2026-10-25",
-  "scope": "Direct Python verification of the refactored Case 0B model and local safety/claim-validation functions. HTTP, browser, fresh-clone, and live-model checks could not be repeated after the refactor in this sandbox.",
+  "scope": "Current Case 0B input and reconciliation checked against extracted NETL PDF pages and direct Python calculation. Local source/configuration clone check passed. HTTP/browser interaction and successful live-model use remain unavailable in this sandbox.",
   "results": {
     "python_syntax": {"status": "passed", "command": "python3 -m py_compile app.py"},
     "browser_script_syntax": {"status": "passed", "method": "Extracted the inline JavaScript from static/index.html and passed it to node --check"},
@@ -32,11 +32,11 @@
     "unreviewed_claim_handoff": {"status": "rejected_by_current_claim_validator", "exception": "ValueError", "model_api_called": false},
     "approved_10_percent_variable_cost_claim": {"status": "accepted_by_current_claim_validator", "note": "Direct code-path check with a synthetic, explicitly human-reviewed compatible claim. Not a real research extraction or model run."},
     "http_server_after_refactor": {"status": "not_run", "reason": "Attempt to start app.py on 127.0.0.1:8765 returned Operation not permitted while binding the socket in this environment."},
-    "fresh_clone_after_refactor": {
-      "status": "local_code_and_env_setup_passed_http_not_run",
-      "setup": "Cloned the current committed repository into /private/tmp, placed a placeholder .env in its parent folder, imported the app, and calculated the Case 0B baseline. A second clone had both parent and repository placeholder .env files.",
-      "results": {"parent_dotenv_priority": true, "repository_dotenv_priority": true, "source_pdf_present_in_clone": true, "capture_cost_usd_per_gross_dac_tonne": 595.53022475856, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2079259999999},
-      "note": "The README startup step python3 app.py and browser use could not complete because this sandbox denies local socket binding. This is not a full staff-run acceptance check."
+    "fresh_clone_after_reconciliation": {
+      "status": "source_calculation_and_env_priority_passed_http_not_run",
+      "setup": "Cloned commit 1642e5a into a new directory, placed a placeholder .env one folder above the clone, imported the app, confirmed the bundled source PDF, and calculated the Case 0B baseline. Added a repository .env and started a fresh Python process to confirm repository-first priority.",
+      "results": {"parent_dotenv_priority": true, "repository_dotenv_priority": true, "source_pdf_present_in_clone": true, "transport_storage_annual_usd_2019_basis": 2390000, "capture_cost_usd_per_gross_dac_tonne": 595.5302247585602, "project_including_ts_usd_per_gross_dac_tonne": 616.5135434591748, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2089259999999},
+      "note": "The README startup step python3 app.py and browser interaction could not complete because this sandbox denies local socket binding. This is not a full staff-run acceptance check."
     },
     "portkey_connection_attempt": {
       "status": "current_code_connection_level_URLError",
