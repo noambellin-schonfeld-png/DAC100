@@ -21,7 +21,7 @@
     "unreviewed_claim_handoff": {"status": 400, "rejected": true, "model_api_called": false},
     "fresh_git_clone": {
       "result": "passed",
-      "setup": "cloned the local repository to /private/tmp/dac100-clone and placed a placeholder .env in its parent folder",
+      "setup": "cloned the latest local repository and ran python3 app.py on the README default port with a placeholder .env in the parent folder",
       "routes": {"GET /api/health": 200, "GET /api/config": 200, "POST /api/calculate": 200},
       "repository_dotenv_priority": "passed with a placeholder key; repository .env overrides parent .env",
       "note": "This confirms local clone setup, not public GitHub access. No credential was copied from Downloads."
