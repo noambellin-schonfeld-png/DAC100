@@ -13,14 +13,14 @@ This is a live checklist. A feature counts as implemented only after it works in
 | Tokenomics (8) | Usage log records API-returned input/cached/output tokens; rates and operating scenarios in report | One real request attempt failed with a connection-level `URLError`; no token counts were returned. Successful measured run and monthly/scale calculations remain pending. |
 | Safety (8) | Excerpt size cap, deterministic injection rejection, fixed instructions, extraction without tools, reviewed values before tool use, one bounded calculation call, two model requests maximum, timeout/output cap, 20 AI runs/day and $0.05 estimated daily API-spend caps | Injection and range controls pass local HTTP checks; API block event logged. Screenshot still needed. Spend-cap path passes an in-memory check. Detector has narrow patterns; no claim of universal prompt-injection prevention. |
 | Impact and metrics (5) | Compare task time/quality or scope before and after use | User reports no practitioner trial is available before the deadline. Do not claim a measured benefit or quote. |
-| Report design (2) | Self-contained 10–15-page `report.html`, embedded screenshots/diagram | Not drafted until evidence is collected; final print pagination check required |
-| Slides (8) | Self-contained reveal.js `slides.html`, <=10 slides, embedded visuals | Not drafted until verified screenshots and measurements exist; keyboard/fullscreen check required |
-| Submission hygiene | Public repo or private access for `zlisto`; no keys; same repo URL in README/report | GitHub destination and access path needed; no remote currently exists |
+| Report design (2) | Self-contained 10–15-page `report.html`, embedded screenshots/diagram | 11 print-page draft created with an embedded workflow diagram; explicitly marked incomplete. Real screenshots and print/pagination check still required. |
+| Slides (8) | Self-contained reveal.js `slides.html`, <=10 slides, embedded visuals | 9-slide draft created with an inline diagram; screenshots and CDN/keyboard/F-key checks still required. |
+| Submission hygiene | Public repo or private access for `zlisto`; no keys; same repo URL in README/report | Local Git repo created and clean at its first commit; user asked to create a public repo later. Final URL still needs inserting in README/report. |
 
 ## Initial findings and remaining gaps
 
 - `Final Proect/` is empty and is not a Git repository.
 - No NETL sorbent DAC case study or DAC-specific prior work was found in Downloads.
 - External network access is unavailable in this environment, so source documents and current competitor details cannot be fetched here.
-- NETL source is expected from the user; no practitioner trial is available before the deadline. A public GitHub destination, successful model usage evidence, final report, slides, browser screenshots, and presentation checks remain outstanding.
+- NETL source is expected from the user; no practitioner trial is available before the deadline. Public GitHub creation, successful model usage evidence, final source-backed report, genuine browser screenshots, and presentation checks remain outstanding.
 - Current starter inputs and scenario bounds are explicitly illustrative user assumptions, not published measurements or validated technical limits.
