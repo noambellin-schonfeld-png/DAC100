@@ -1,26 +1,39 @@
 # Rubric-to-feature and evidence map
 
-This is a live checklist. A feature counts as implemented only after it works in this repository; an evidence item counts only after it is captured from a real run or real user.
+| Rubric area | DAC100 feature / deliverable | Current evidence status |
+|---|---|---|
+| Idea: novelty and real-world value (21) | Case 0B cost reproduction; source-labeled research claims; constrained evidence-to-calculation handoff; research follow-up questions | Source/document workflow is now implemented. No practitioner trial is available; workflow differentiation remains a design contribution, not proven user value. |
+| Application works (15) | Standard-library local app; NETL annual cost calculation; three-denominator COC comparison; one-at-a-time sensitivity; bounded scenarios; evidence extractor; reviewed claim-to-tool flow; local activity/usage log | Current Python functions reproduce the rounded source values, reject an injection pattern and unreviewed claim, and validate bounds. HTTP/browser route is unavailable in the sandbox because socket binding is denied. AI connection previously failed; no successful model run or token usage. Screenshots absent. |
+| Staff can run (5) | README, `.env.example`, repository-first then parent `.env` lookup, bundled source PDF, Python stdlib | The previous fresh-clone check passed before this Case 0B refactor. It must be repeated after refactor, preferably using the public GitHub URL. Public repo URL pending. |
+| Look and feel (10) | Source-tagged input editor, cost breakdown, scenario sliders, published result cross-check, evidence review and activity log | UI refactored around Case 0B. No browser rendering/screenshot check yet. |
+| Motivation + what is new (8) | Report sections 2–3 | NETL report and direct Case 0B comparators are now identified. CarbonPlan product audit and comparative ChatGPT trial remain to be done; practitioner trial unavailable. |
+| Agent design (10) | Report section 4, evidence-to-tool diagram, source claims and bounded deterministic tool | Workflow is implemented. A real Luna run and screenshots of each step remain unavailable. |
+| Tokenomics (8) | API log records input, cached-input, output tokens and rate-based cost | No successful response returned usage. Do not report invented tokens or per-user/scale dollar totals. |
+| Safety (8) | Input validation, excerpt cap, instruction-pattern block, human approval, exact-unit/condition validation, bounded cost reductions, ≤2 requests/≤1 calc call, timeout and daily spend caps | Current direct Python checks rejected a prompt-injection pattern and unreviewed claim and validated the storage-fraction bound. HTTP/UI presentation still needs a browser check. Detector is narrow and does not guarantee universal prompt-injection prevention. |
+| Impact + metrics (5) | Report section 7; quantified Case 0B cost decomposition | NETL modeled estimate is reported evidence, not DAC100 user impact. User confirms no practitioner can test before deadline; no impact or user-trial claim will be made. |
+| Report design (2) | Self-contained 10–15 print-page `report.html`; embedded diagram/screenshots | 11 explicit page sections with source data, reconciliation, and inline diagram. Genuine app screenshots and pagination check pending. |
+| Slides (8) | <=10-slide Reveal.js `slides.html`, source-backed result, diagram, demo visual and cost evidence | 9 slides with Case 0B values and inline diagram. Real screenshots, key navigation, CDN, and F-key checks pending. |
+| Submission hygiene | Public repository, no committed keys, supported `.env` arrangement, single-file HTML deliverables | `.env` is ignored; `.env.example` is a placeholder. Public repo is pending. Source PDF is bundled. Verify `git status` and GitHub URL before Canvas. |
 
-| Rubric area | DAC100 feature or deliverable | Evidence status |
-| --- | --- | --- |
-| Idea: novelty and real-world value (21) | Link research claims to named, source-labeled cost inputs; calculate constrained, conditional scenarios; rank follow-up investigation questions | Product distinction is a design goal; compare CarbonPlan DAC calculator and ChatGPT with sourced, checked details in report |
-| Application works (15) | Deterministic Python cost calculator, explicit capture/net boundaries, bounded scenario search, structured evidence extractor, human-reviewed evidence-to-tool agent, input validation, and append-only run log | Local HTTP smoke check: health/config/calculation returned 200; invalid range 400; injection 422 before API call; unreviewed evidence rejected. Stubbed tool protocol check passed but is not real model evidence. Portkey extraction could not connect. Browser screenshots still needed. |
-| Staff can run (5) | Standard-library local server; README; `.env.example`; repository-first then parent `.env` lookup | Latest local Git clone passed `python3 app.py` on the README default port with a placeholder parent `.env`; health/config/calculation returned 200. Repository `.env` priority passed. Public GitHub clone still pending. |
-| Look and feel (10) | Single-page dashboard with assumption editor, cost breakdown, scenario controls, and evidence review | UI built; no browser rendering check or actual screenshot could be captured in this environment |
-| Motivation and novelty (8) | Report sections 2–3 | Need real user workflow/cost and researched alternatives |
-| Agent design (10) | Report section 4, flow diagram, real trace and screenshots | Need captured actual Portkey run and UI trace |
-| Tokenomics (8) | Usage log records API-returned input/cached/output tokens; rates and operating scenarios in report | One real request attempt failed with a connection-level `URLError`; no token counts were returned. Successful measured run and monthly/scale calculations remain pending. |
-| Safety (8) | Excerpt size cap, deterministic injection rejection, fixed instructions, extraction without tools, reviewed values before tool use, one bounded calculation call, two model requests maximum, timeout/output cap, 20 AI runs/day and $0.05 estimated daily API-spend caps | Injection and range controls pass local HTTP checks; API block event logged. Screenshot still needed. Spend-cap path passes an in-memory check. Detector has narrow patterns; no claim of universal prompt-injection prevention. |
-| Impact and metrics (5) | Compare task time/quality or scope before and after use | User reports no practitioner trial is available before the deadline. Do not claim a measured benefit or quote. |
-| Report design (2) | Self-contained 10–15-page `report.html`, embedded screenshots/diagram | 11 print-page draft created with an embedded workflow diagram; explicitly marked incomplete. Real screenshots and print/pagination check still required. |
-| Slides (8) | Self-contained reveal.js `slides.html`, <=10 slides, embedded visuals | 9-slide draft created with an inline diagram; screenshots and CDN/keyboard/F-key checks still required. |
-| Submission hygiene | Public repo or private access for `zlisto`; no keys; same repo URL in README/report | Local Git repo created and clean at its first commit; user asked to create a public repo later. Final URL still needs inserting in README/report. |
+## Case 0B reproduction and reconciliation
 
-## Initial findings and remaining gaps
+- Source: Valentine & Zoelle (2022), DOE/NETL-2021/2865. Main cost result: Exhibit 5-16, printed p. 50 / PDF viewer p. 62. Supporting §§3.5–3.6 and Exhibits 5-4, 5-7, 5-13, 5-14.
+- Annual DAC gross capture: 113,900 tCO₂/year; residual NGCC stack emissions: 13,900 t/year; NETL-boundary net atmospheric removal: 100,000 t/year.
+- Total CO₂ product sent to T&S: 238,990 t/year (113,900 DAC + 125,090 NGCC flue-gas capture).
+- Annual costs at the Case 0B point: $34.944m capital charges (printed Exhibit 5-13 TASC $494.258m × §3.6 FCR 0.0707), $15.343999m fixed O&M, $6.143693m variable O&M, $11.399160m fuel, and $2.389900m T&S.
+- Formula in code: `(annual capital + fixed O&M + variable O&M + fuel + T&S + entered verification cost) / modeled net atmospheric tonnes`. Capture-only cost excludes T&S and verification. DAC100 uses actual 85%-CF annual outputs and annual variable/fuel values directly; no second capacity-factor multiplication.
+- One-at-a-time sensitivity function evaluates each cost lever separately at its analyst-set maximum and reports the resulting NETL-boundary cost and savings. It holds output and boundary fixed; it is not an engineering compatibility analysis.
+- Reproduction from printed support values: capture $595.53 / DAC gross t; project $616.51 / DAC gross t including T&S; $702.21 / NETL-boundary net atmospheric t; $293.82 / total plant CO₂ product t. These are within $0.2/t of Exhibit 5-16's $595.7, $616.7, $702.4, $293.9.
+- Capital reconciliation: printed Exhibit 5-13 TASC $494.258m × FCR 0.0707 gives $34.944m annual charges / $349.44 per net t. Exhibit 5-16's rounded capital COC row is $349.6, a $0.16/t difference. DAC100 applies the published TASC and FCR formula and documents the discrepancy; it does not use the published COC as a back-solved input.
+- Exhibit 5-4/5-7 residual stack emissions differ by one tonne/year due rounding (13,900 versus 13,901); the calculation follows Exhibit 5-4's net-flow reconciliation.
+- §3.5 labels its Midwest T&S assumption as $10/t in 2018 dollars; Exhibit 5-16 reports COC in 2019 dollars. DAC100 uses the Exhibit 5-16 $23.9/net-t line converted to the annual total; no undocumented inflation adjustment is invented.
+- NETL's net boundary is a modeled plant balance, not a complete LCA. Separate verification/MRV, construction/supply-chain emissions, leakage, and independently established durable storage are absent. DAC100 labels the $702.21 result “NETL-boundary modeled cost”; complete lifecycle net-removal cost is unquantified.
 
-- `Final Proect/` is empty and is not a Git repository.
-- No NETL sorbent DAC case study or DAC-specific prior work was found in Downloads.
-- External network access is unavailable in this environment, so source documents and current competitor details cannot be fetched here.
-- NETL source is expected from the user; no practitioner trial is available before the deadline. Public GitHub creation, successful model usage evidence, final source-backed report, genuine browser screenshots, and presentation checks remain outstanding.
-- Current starter inputs and scenario bounds are explicitly illustrative user assumptions, not published measurements or validated technical limits.
+## Remaining evidence to collect
+
+1. Repeat HTTP calculator, invalid-input, injection, claim-approval, and fresh public clone checks; update `evidence/development-smoke-check.json` with actual outputs. The current record contains direct-function checks only.
+2. Obtain a successful course Portkey GPT-6 Luna extraction and reviewed calculation-agent run from a network-enabled environment. Keep actual usage JSONL without exposing the key; report returned token counts and rate-card cost.
+3. Capture genuine running-app screenshots for baseline, successful agent, and blocked injection. Do not use diagrams or mockups as application screenshots.
+4. Audit CarbonPlan's DAC calculator and ChatGPT on the same task; cite checked pages and date, and acknowledge overlapping capabilities.
+5. Create the public GitHub repository, replace the placeholder URL, verify no `.env`/credentials are tracked, and clone/run the actual public repo.
+6. Print-check `report.html` at letter size for 10–15 pages. Open `slides.html`, check every slide, arrow navigation, and F-key full screen; CDN requires a network-enabled browser.

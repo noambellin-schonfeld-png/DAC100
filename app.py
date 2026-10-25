@@ -31,34 +31,28 @@ MODEL_PRICES_PER_MILLION = {"input": 0.10, "cached_input": 0.01, "output": 0.50}
 LOG_LOCK = threading.Lock()
 
 INPUT_LIMITS = {
-    "capacity_t_per_year": (1_000, 100_000_000),
-    "capacity_factor": (0.01, 1.0),
-    "capex_usd": (10_000, 1_000_000_000_000),
-    "capital_recovery_rate": (0.0, 0.5),
-    "fixed_om_fraction": (0.0, 0.5),
-    "electricity_mwh_per_t": (0.0, 50.0),
-    "electricity_usd_per_mwh": (0.0, 10_000.0),
-    "heat_gj_per_t": (0.0, 100.0),
-    "heat_usd_per_gj": (0.0, 10_000.0),
-    "sorbent_om_usd_per_t": (0.0, 1_000_000.0),
-    "transport_storage_usd_per_t": (0.0, 100_000.0),
-    "verification_usd_per_t": (0.0, 100_000.0),
-    "electricity_kgco2e_per_mwh": (0.0, 100_000.0),
-    "heat_kgco2e_per_gj": (0.0, 100_000.0),
-    "other_lifecycle_kgco2e_per_t": (0.0, 1_000_000.0),
-    "durable_storage_fraction": (0.0, 1.0),
+    "gross_dac_tonnes_per_year": (1_000, 100_000_000),
+    "ngcc_residual_emissions_tonnes_per_year": (0, 100_000_000),
+    "plant_co2_product_tonnes_per_year": (1_000, 200_000_000),
+    "capital_charges_annual_usd": (0, 1_000_000_000_000),
+    "fixed_om_annual_usd": (0, 1_000_000_000_000),
+    "variable_om_annual_usd": (0, 1_000_000_000_000),
+    "fuel_annual_usd": (0, 1_000_000_000_000),
+    "transport_storage_annual_usd": (0, 1_000_000_000_000),
+    "verification_annual_usd": (0, 1_000_000_000_000),
+    "durable_storage_fraction": (0, 1),
 }
 IMPROVEMENT_LIMITS = {
-    "capex": "capex_reduction_max",
-    "electricity": "electricity_intensity_reduction_max",
-    "heat": "heat_intensity_reduction_max",
-    "sorbent": "sorbent_cost_reduction_max",
+    "capital": "capital_reduction_max",
+    "fixed_om": "fixed_om_reduction_max",
+    "variable_om": "variable_om_reduction_max",
+    "fuel": "fuel_reduction_max",
 }
 SCENARIO_INPUTS = {
-    "capex": "capex_usd",
-    "electricity": "electricity_mwh_per_t",
-    "heat": "heat_gj_per_t",
-    "sorbent": "sorbent_om_usd_per_t",
+    "capital": "capital_charges_annual_usd",
+    "fixed_om": "fixed_om_annual_usd",
+    "variable_om": "variable_om_annual_usd",
+    "fuel": "fuel_annual_usd",
 }
 PROMPT_INJECTION = re.compile(
     r"(?:ignore\s+(?:all\s+)?(?:previous|prior|above)\s+instructions"
@@ -125,7 +119,7 @@ def validate_inputs(raw_inputs: object) -> dict[str, float]:
 
 
 def calculate(values: dict[str, float], improvements: dict[str, float] | None = None) -> dict:
-    """Calculate unit costs per gross tonne and per net tonne using code only."""
+    """Reproduce NETL Case 0B's reported annual-cost boundary using code only."""
     changes = improvements or {key: 0.0 for key in IMPROVEMENT_LIMITS}
     bounds = BASELINE["scenario_bounds"]
     if set(changes) != set(IMPROVEMENT_LIMITS):
@@ -134,44 +128,50 @@ def calculate(values: dict[str, float], improvements: dict[str, float] | None = 
     for key, bound_key in IMPROVEMENT_LIMITS.items():
         reductions[key] = _finite_number(changes[key], f"{key} reduction", 0.0, bounds[bound_key])
 
-    annual_gross_tonnes = values["capacity_t_per_year"] * values["capacity_factor"]
-    capex = values["capex_usd"] * (1 - reductions["capex"])
-    electricity_intensity = values["electricity_mwh_per_t"] * (1 - reductions["electricity"])
-    heat_intensity = values["heat_gj_per_t"] * (1 - reductions["heat"])
-    sorbent_cost = values["sorbent_om_usd_per_t"] * (1 - reductions["sorbent"])
-    rows = {
-        "Annualized capital": capex * values["capital_recovery_rate"] / annual_gross_tonnes,
-        "Fixed O&M": capex * values["fixed_om_fraction"] / annual_gross_tonnes,
-        "Electricity": electricity_intensity * values["electricity_usd_per_mwh"],
-        "Process heat": heat_intensity * values["heat_usd_per_gj"],
-        "Sorbent and variable O&M": sorbent_cost,
+    gross_dac = values["gross_dac_tonnes_per_year"]
+    net_atmospheric = gross_dac * values["durable_storage_fraction"] - values["ngcc_residual_emissions_tonnes_per_year"]
+    if net_atmospheric <= 0:
+        raise ValueError("The entered residual emissions and storage fraction leave no positive NETL-boundary net removal.")
+    if values["plant_co2_product_tonnes_per_year"] < gross_dac:
+        raise ValueError("Total CO2 product flow cannot be lower than gross DAC capture.")
+
+    annual_costs = {
+        "Capital": values["capital_charges_annual_usd"] * (1 - reductions["capital"]),
+        "Fixed O&M": values["fixed_om_annual_usd"] * (1 - reductions["fixed_om"]),
+        "Variable O&M": values["variable_om_annual_usd"] * (1 - reductions["variable_om"]),
+        "Fuel": values["fuel_annual_usd"] * (1 - reductions["fuel"]),
     }
+    rows = {name: amount / gross_dac for name, amount in annual_costs.items()}
     capture_cost = sum(rows.values())
     post_capture = {
-        "Transport and storage": values["transport_storage_usd_per_t"],
-        "Verification (MRV)": values["verification_usd_per_t"],
+        "Transport and storage": values["transport_storage_annual_usd"] / gross_dac,
+        "Verification (MRV), entered": values["verification_annual_usd"] / gross_dac,
     }
     gross_project_cost = capture_cost + sum(post_capture.values())
-    lifecycle_tonnes = (
-        electricity_intensity * values["electricity_kgco2e_per_mwh"]
-        + heat_intensity * values["heat_kgco2e_per_gj"]
-        + values["other_lifecycle_kgco2e_per_t"]
-    ) / 1_000
-    net_fraction = values["durable_storage_fraction"] - lifecycle_tonnes
-    if net_fraction <= 0:
-        raise ValueError("Modeled lifecycle emissions are at least one tonne per gross tonne; net removal is not positive.")
-    full_net_cost = gross_project_cost / net_fraction
+    annual_project_cost = sum(annual_costs.values()) + values["transport_storage_annual_usd"] + values["verification_annual_usd"]
+    net_fraction = net_atmospheric / gross_dac
+    netl_boundary_cost = annual_project_cost / net_atmospheric
     return {
-        "annual_gross_tonnes": annual_gross_tonnes,
+        "annual_gross_tonnes": gross_dac,
+        "annual_dac_gross_tonnes": gross_dac,
+        "annual_net_atmospheric_tonnes": net_atmospheric,
+        "annual_plant_co2_product_tonnes": values["plant_co2_product_tonnes_per_year"],
+        "annual_ngcc_residual_emissions_tonnes": values["ngcc_residual_emissions_tonnes_per_year"],
         "capture_breakdown_usd_per_gross_t": rows,
         "capture_cost_usd_per_gross_t": capture_cost,
         "post_capture_usd_per_gross_t": post_capture,
         "full_project_usd_per_gross_t": gross_project_cost,
-        "lifecycle_emissions_tco2e_per_gross_t": lifecycle_tonnes,
+        "netl_process_emissions_tco2_per_gross_t": values["ngcc_residual_emissions_tonnes_per_year"] / gross_dac,
         "durable_storage_fraction": values["durable_storage_fraction"],
         "net_removal_fraction": net_fraction,
-        "net_tonnes_per_year": annual_gross_tonnes * net_fraction,
-        "full_net_removal_usd_per_net_t": full_net_cost,
+        "net_tonnes_per_year": net_atmospheric,
+        "netl_boundary_cost_usd_per_net_t": netl_boundary_cost,
+        "full_net_removal_usd_per_net_t": netl_boundary_cost,
+        "full_lifecycle_net_removal_usd_per_net_t": None,
+        "netl_coc_dacgross_usd_per_t": annual_project_cost / gross_dac,
+        "netl_coc_plantgross_usd_per_t": annual_project_cost / values["plant_co2_product_tonnes_per_year"],
+        "annual_costs_usd": annual_costs,
+        "annual_project_cost_usd": annual_project_cost,
         "improvements": reductions,
     }
 
@@ -182,11 +182,31 @@ def target_search(values: dict[str, float], target: float) -> dict:
     best = calculate(values, max_changes)
     return {
         "target_usd_per_net_t": checked_target,
-        "all_bounds_scenario": best["full_net_removal_usd_per_net_t"],
-        "reachable_within_entered_ranges": best["full_net_removal_usd_per_net_t"] <= checked_target,
+        "all_bounds_scenario": best["netl_boundary_cost_usd_per_net_t"],
+        "reachable_within_entered_ranges": best["netl_boundary_cost_usd_per_net_t"] <= checked_target,
         "max_reductions": max_changes,
-        "qualification": "Arithmetic result only. Bounds are unvalidated user assumptions and simultaneous improvements are not shown to be technically compatible.",
+        "qualification": "Arithmetic only on NETL's modeled cost boundary. Separate verification/MRV and full lifecycle emissions are not quantified; permanence is assumed, not verified. Bounds are analyst-set, and stacked improvements are not shown to be technically compatible.",
     }
+
+
+def sensitivity_analysis(values: dict[str, float]) -> list[dict]:
+    """Show one cost lever at a time at its analyst-set bound; no interactions assumed."""
+    baseline = calculate(values)
+    rows = []
+    for lever, bound_key in IMPROVEMENT_LIMITS.items():
+        changes = {key: 0.0 for key in IMPROVEMENT_LIMITS}
+        changes[lever] = BASELINE["scenario_bounds"][bound_key]
+        result = calculate(values, changes)
+        rows.append({
+            "lever": lever,
+            "maximum_reduction_fraction": changes[lever],
+            "baseline_net_cost_usd_per_t": baseline["netl_boundary_cost_usd_per_net_t"],
+            "scenario_net_cost_usd_per_t": result["netl_boundary_cost_usd_per_net_t"],
+            "net_cost_savings_usd_per_t": baseline["netl_boundary_cost_usd_per_net_t"] - result["netl_boundary_cost_usd_per_net_t"],
+            "capture_cost_savings_usd_per_gross_t": baseline["capture_cost_usd_per_gross_t"] - result["capture_cost_usd_per_gross_t"],
+            "qualification": "One lever only; analyst-set ceiling, constant output and boundary. Not a NETL sensitivity or engineering claim.",
+        })
+    return sorted(rows, key=lambda row: row["net_cost_savings_usd_per_t"], reverse=True)
 
 
 def eligible_scenario_claims(claims_raw: object, values: dict[str, float]) -> list[dict]:
@@ -204,7 +224,7 @@ def eligible_scenario_claims(claims_raw: object, values: dict[str, float]) -> li
         input_id = item.get("input_id")
         claim_id = item.get("claim_id")
         if input_id not in SCENARIO_INPUTS.values():
-            issues.append("Only capital, electricity, heat, and sorbent cost claims can be scenario inputs.")
+            issues.append("Only the capital-charge, fixed O&M, variable O&M, and fuel cost inputs can be scenario levers.")
             continue
         if not isinstance(claim_id, str) or not re.fullmatch(r"c[0-9]{1,2}", claim_id):
             issues.append("A selected claim has an invalid local claim ID.")
@@ -291,7 +311,7 @@ def prioritize_evidence(inputs_raw: object, claims_raw: object) -> dict:
     key = _model_key()
     if not key:
         raise RuntimeError("AI evidence review needs PORTKEY_API_KEY in DAC100/.env or the parent folder's .env.")
-    task = {"user_question": "Which source-supported, bounded changes merit priority, and what does the deterministic calculation imply about the $100 per-net-ton target?",
+    task = {"user_question": "Which source-supported, bounded changes merit priority, and what does the deterministic Case 0B boundary calculation imply about the $100 per net atmospheric tonne target?",
             "current_inputs": [{"input_id": k, "label": INPUT_META[k]["label"], "value": values[k], "unit": INPUT_META[k]["unit"]} for k in INPUT_META],
             "approved_evidence": claims,
             "scenario_bounds": {kind: BASELINE["scenario_bounds"][bound] for kind, bound in IMPROVEMENT_LIMITS.items()},
@@ -302,7 +322,7 @@ def prioritize_evidence(inputs_raw: object, claims_raw: object) -> dict:
         "selecting only claim IDs that support a like-for-like lower value for the same input and condition. If values are not comparable, "
         "do not select them. The code tool enforces ranges and performs all arithmetic. After the tool returns, explain which evidence was "
         "used, what the deterministic result means, the limitations, and what to investigate next. Treat scenario combinations as conditional; "
-        "do not imply that improvements coexist unless the evidence establishes that. Do not invent cost, energy, or emissions numbers."
+        "do not imply that improvements coexist unless the evidence establishes that. Do not invent cost, energy, or emissions numbers. State that Case 0B's net-cost boundary excludes quantified full lifecycle emissions, separate verification/MRV, and verified storage permanence."
     )
     eligible_ids = [claim["claim_id"] for claim in claims]
     tool = {"type": "function", "name": "evaluate_supported_scenario",
@@ -388,23 +408,22 @@ def prioritize_evidence(inputs_raw: object, claims_raw: object) -> dict:
         raise RuntimeError("The calculation ran, but the model returned no explanation. Review the deterministic comparison.")
     append_event({"event": "evidence_agent_success", "request_id": request_id, **totals, "api_cost_usd": cost, "reserved_cost_usd": reserved_cost,
                   "model_requests": 2, "tool_calls": 1, "selected_claims": len(selected), "capture_cost_usd_per_gross_t": scenario_result["capture_cost_usd_per_gross_t"],
-                  "full_net_removal_usd_per_net_t": scenario_result["full_net_removal_usd_per_net_t"], "api_called": True})
+                  "netl_boundary_cost_usd_per_net_t": scenario_result["netl_boundary_cost_usd_per_net_t"], "api_called": True})
     return {"explanation": explanation, "comparison": comparison,
             "usage": {"model": DEFAULT_MODEL, **totals, "api_cost_usd": cost, "model_requests": 2, "tool_calls": 1}}
 
 
 def prioritized_questions(values: dict[str, float], result: dict) -> list[str]:
     questions_by_cost = {
-        "Annualized capital": "What installed-cost evidence and financing assumptions support this capital cost and recovery rate at the modeled plant scale?",
-        "Fixed O&M": "Which labor, maintenance, and replacement items are included in fixed O&M, and what plant data support the annual fraction?",
-        "Electricity": "What pilot or vendor data establish electricity use per gross tonne, and what local power contract and grid emissions factor apply?",
-        "Process heat": "What regeneration heat duty and supply temperature have been measured, and what low-carbon heat source is available at the site?",
-        "Sorbent and variable O&M": "What measured sorbent working capacity, lifetime, degradation, and replacement cost support this annualized variable cost?",
+        "Capital": "Which equipment and financial assumptions drive the $34.96 million annual capital charge, and how much can a DAC-only redesign reduce it without changing Case 0B output?",
+        "Fixed O&M": "Which labor, maintenance, tax, and insurance items dominate Case 0B's $15.34 million annual fixed O&M, and which are scale-dependent?",
+        "Variable O&M": "What measured sorbent lifetime, cost, replacement rate, and consumables could reduce the $6.14 million variable O&M estimate?",
+        "Fuel": "What measured heat and power integration changes could reduce the $11.40 million natural-gas cost while preserving the reported net-removal balance?",
     }
     ordered = sorted(result["capture_breakdown_usd_per_gross_t"].items(), key=lambda item: item[1], reverse=True)
     questions = [questions_by_cost[name] for name, _ in ordered[:3]]
-    questions.append("What monitoring, leakage, and permanence evidence supports the durable-storage fraction, and which lifecycle-emissions sources remain outside the boundary?")
-    questions.append("Are the selected cost and energy improvements independently demonstrated, and can they coexist at the same operating conditions?")
+    questions.append("What independent lifecycle inventory, leakage monitoring, storage permanence, and verification/MRV costs are absent from NETL Case 0B's boundary?")
+    questions.append("Are proposed cost reductions independently demonstrated under Case 0B-like conditions, and can they coexist without changing energy use or annual output?")
     return questions
 
 
@@ -572,14 +591,14 @@ class Handler(BaseHTTPRequestHandler):
             except OSError:
                 self._send(500, "Could not read the application page.", "text/plain; charset=utf-8")
         elif self.path == "/api/config":
-            self._send(200, {"case": {"name": BASELINE["case_name"], "status": BASELINE["baseline_status"], "source": BASELINE["source"], "currency_year": BASELINE["currency_year"], "scenario_bounds_note": BASELINE["scenario_bounds_note"]}, "inputs": INPUT_META, "limits": BASELINE["scenario_bounds"], "source_kinds": SOURCE_KINDS, "model_configured": bool(_model_key()), "model": DEFAULT_MODEL})
+            self._send(200, {"case": {"name": BASELINE["case_name"], "status": BASELINE["baseline_status"], "source": BASELINE["source"], "currency_year": BASELINE["currency_year"], "scenario_bounds_note": BASELINE["scenario_bounds_note"], "study_conditions": BASELINE["study_conditions"], "published_coc_table": BASELINE["published_coc_table"]}, "inputs": INPUT_META, "limits": BASELINE["scenario_bounds"], "source_kinds": SOURCE_KINDS, "model_configured": bool(_model_key()), "model": DEFAULT_MODEL})
         elif self.path == "/api/activity":
             rows = []
             if LOG_PATH.is_file():
                 for line in LOG_PATH.read_text(encoding="utf-8").splitlines()[-15:]:
                     try:
                         entry = json.loads(line)
-                        rows.append({key: entry.get(key) for key in ("time_utc", "event", "model", "input_tokens", "cached_input_tokens", "output_tokens", "api_cost_usd", "reserved_cost_usd", "api_called", "claims_returned", "model_requests", "tool_calls", "capture_cost_usd_per_gross_t", "full_net_removal_usd_per_net_t", "http_status", "error_type") if key in entry})
+                        rows.append({key: entry.get(key) for key in ("time_utc", "event", "model", "input_tokens", "cached_input_tokens", "output_tokens", "api_cost_usd", "reserved_cost_usd", "api_called", "claims_returned", "model_requests", "tool_calls", "capture_cost_usd_per_gross_t", "full_net_removal_usd_per_net_t", "netl_boundary_cost_usd_per_net_t", "http_status", "error_type") if key in entry})
                     except json.JSONDecodeError:
                         continue
             self._send(200, {"events": rows})
@@ -599,8 +618,9 @@ class Handler(BaseHTTPRequestHandler):
                 changes = body.get("improvements", {key: 0.0 for key in IMPROVEMENT_LIMITS})
                 result = calculate(values, changes)
                 result["target_search"] = target_search(values, body.get("target_usd_per_net_t", 100))
+                result["sensitivity_analysis"] = sensitivity_analysis(values)
                 result["investigation_questions"] = prioritized_questions(values, calculate(values))
-                append_event({"event": "calculation", "improvements": result["improvements"], "capture_cost_usd_per_gross_t": result["capture_cost_usd_per_gross_t"], "full_net_removal_usd_per_net_t": result["full_net_removal_usd_per_net_t"]})
+                append_event({"event": "calculation", "improvements": result["improvements"], "capture_cost_usd_per_gross_t": result["capture_cost_usd_per_gross_t"], "netl_boundary_cost_usd_per_net_t": result["netl_boundary_cost_usd_per_net_t"]})
                 self._send(200, result)
             else:
                 if self.path == "/api/analyze":

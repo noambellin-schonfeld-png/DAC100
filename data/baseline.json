@@ -1,31 +1,108 @@
 {
-  "case_name": "Illustrative solid-sorbent DAC starter case",
-  "baseline_status": "illustrative_user_assumptions",
-  "source": "No published case has been transcribed yet. Every value below is an unverified starter assumption; this file is not a NETL reproduction.",
-  "currency_year": "2024 USD (illustrative; replace/verify)",
+  "case_name": "NETL Case 0B — monolith solid-sorbent DAC",
+  "baseline_status": "published_model_reproduction",
+  "source": "Valentine & Zoelle (2022), DOE/NETL-2021/2865, Case 0B. Full PDF: sources/Valentine_Zoelle_NETL_DAC_Sorbent_2022.pdf. Cost table: Exhibit 5-16, printed p. 50 (PDF p. 62). Supporting basis: §§3.5–3.6; Exhibits 5-4, 5-7, 5-13, 5-14; printed pp. 19–21, 32–35, 46–47 (PDF pp. 31–33, 44–47, 58–59).",
+  "currency_year": "2019 USD",
+  "study_conditions": {
+    "capacity_factor": 0.85,
+    "plant_location": "Generic greenfield site, Midwest U.S.",
+    "configuration": "Monolith sorbent DAC integrated with a natural-gas combined-cycle plant; 90% capture of NGCC flue-gas CO2; 60% capture fraction in DAC adsorbers.",
+    "plant_size_net_tonnes_per_year": 100000,
+    "cost_estimate_class": "AACE Class 5 conceptual estimate; capital uncertainty stated as +/-50%.",
+    "cost_boundary": "Integrated NGCC + Cansolv flue-gas capture + DAC system; includes NETL-assumed CO2 transport and saline storage. Does not quantify full construction/supply-chain lifecycle emissions, storage leakage/permanence, or a separate verification/MRV cost.",
+    "capacity_factor_note": "The listed annual Case 0B mass flows in Exhibit 5-4 and annual variable/fuel costs in Exhibit 5-14 are at the stated 85% capacity factor. DAC100 uses these annual quantities directly; it does not multiply them by 0.85 again. Exhibit 3-6's COC equation uses CF when starting from 100%-CF flow/cost quantities.",
+    "source_status_note": "This is a reproduction of NETL's modeled cost-of-capture boundary, not a commercial quote, a full LCA, or evidence that the stored product meets a separately verified durable-removal standard."
+  },
   "inputs": {
-    "capacity_t_per_year": {"label": "Nameplate capacity", "value": 1000000, "unit": "gross tCO2/year", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "capacity_factor": {"label": "Capacity factor", "value": 0.9, "unit": "fraction", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "capex_usd": {"label": "Installed capital cost", "value": 550000000, "unit": "USD", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "capital_recovery_rate": {"label": "Capital recovery rate", "value": 0.1, "unit": "fraction/year", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "fixed_om_fraction": {"label": "Fixed O&M as share of capital cost", "value": 0.06, "unit": "fraction/year", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "electricity_mwh_per_t": {"label": "Electricity intensity", "value": 0.5, "unit": "MWh/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "electricity_usd_per_mwh": {"label": "Electricity price", "value": 100, "unit": "USD/MWh", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "heat_gj_per_t": {"label": "Process heat intensity", "value": 4, "unit": "GJ/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "heat_usd_per_gj": {"label": "Process heat price", "value": 8, "unit": "USD/GJ", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "sorbent_om_usd_per_t": {"label": "Sorbent replacement and other variable O&M", "value": 25, "unit": "USD/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; source not yet verified."},
-    "transport_storage_usd_per_t": {"label": "Transport and storage", "value": 20, "unit": "USD/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; site-specific value not supplied."},
-    "verification_usd_per_t": {"label": "Measurement, reporting, and verification", "value": 2, "unit": "USD/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; site-specific value not supplied."},
-    "electricity_kgco2e_per_mwh": {"label": "Electricity lifecycle emissions intensity", "value": 300, "unit": "kgCO2e/MWh", "kind": "User assumption", "source": "Illustrative starter value; grid/location not specified."},
-    "heat_kgco2e_per_gj": {"label": "Heat lifecycle emissions intensity", "value": 10, "unit": "kgCO2e/GJ", "kind": "User assumption", "source": "Illustrative starter value; heat source not specified."},
-    "other_lifecycle_kgco2e_per_t": {"label": "Other lifecycle emissions", "value": 10, "unit": "kgCO2e/gross tCO2", "kind": "User assumption", "source": "Illustrative starter value; lifecycle boundary not verified."},
-    "durable_storage_fraction": {"label": "Gross capture durably stored", "value": 1.0, "unit": "fraction", "kind": "User assumption", "source": "Illustrative starter value assumes all captured CO2 is permanently stored; no project-specific evidence supplied."}
+    "gross_dac_tonnes_per_year": {
+      "label": "Gross CO2 removed from air",
+      "value": 113900,
+      "unit": "tCO2/year at 85% CF",
+      "kind": "Published modeling assumption",
+      "source": "Exhibit 5-4: 113,900 t/year gross DAC removal. Already an annual quantity at 85% CF; do not multiply by CF again."
+    },
+    "ngcc_residual_emissions_tonnes_per_year": {
+      "label": "Residual NGCC CO2 emitted",
+      "value": 13900,
+      "unit": "tCO2/year at 85% CF",
+      "kind": "Published modeling assumption",
+      "source": "NETL process-model outputs in Exhibits 5-4 and 5-7 report approximately 13,900–13,901 t/year; difference is source-table rounding. This plant-boundary emission is deducted from DAC gross removal in NETL's 100,000 t/year net target."
+    },
+    "plant_co2_product_tonnes_per_year": {
+      "label": "Total CO2 product sent to T&S",
+      "value": 238990,
+      "unit": "tCO2/year at 85% CF",
+      "kind": "Published modeling assumption",
+      "source": "Exhibit 5-16 note: 113,900 t/year gross DAC product plus 125,090 t/year captured from NGCC flue gas. This is the T&S throughput used for the plant-gross denominator."
+    },
+    "capital_charges_annual_usd": {
+      "label": "Annual capital charges (FCR × TASC)",
+      "value": 34944040.6,
+      "unit": "2019 USD/year",
+      "kind": "Published modeling assumption",
+      "source": "Calculated directly from Exhibit 5-13 TASC of $494.258m × §3.6 FCR 0.0707. This gives $349.44/net t at 100,000 t/year, versus the independently rounded Exhibit 5-16 capital row of $349.6; see reconciliation in README/report."
+    },
+    "fixed_om_annual_usd": {
+      "label": "Fixed O&M",
+      "value": 15343999,
+      "unit": "2019 USD/year",
+      "kind": "Published modeling assumption",
+      "source": "Exhibit 5-14: $15,343,999 annual fixed operating cost at the Case 0B design point. Fixed cost is not multiplied by capacity factor in the COC formula."
+    },
+    "variable_om_annual_usd": {
+      "label": "Variable O&M (excluding fuel)",
+      "value": 6143693,
+      "unit": "2019 USD/year at 85% CF",
+      "kind": "Published modeling assumption",
+      "source": "Exhibit 5-14: $6,143,693 annual variable O&M at the stated 85% CF. It is already capacity-factor adjusted."
+    },
+    "fuel_annual_usd": {
+      "label": "Natural-gas fuel cost",
+      "value": 11399160,
+      "unit": "2019 USD/year at 85% CF",
+      "kind": "Published modeling assumption",
+      "source": "Exhibit 5-14: $11,399,160 annual natural-gas cost at $4.42/MMBtu and the stated 85% CF. It is already capacity-factor adjusted."
+    },
+    "transport_storage_annual_usd": {
+      "label": "CO2 transport and storage",
+      "value": 2389900,
+      "unit": "2019 USD/year",
+      "kind": "Published modeling assumption",
+      "source": "Derived from the Exhibit 5-16 DACnet T&S line ($23.9/net t × 100,000 net t/year); consistent with §3.5's Midwest $10/t assumption applied to 238,990 t/year total CO2 product. §3.5 labels its underlying regional values 2018 USD; Exhibit 5-16 reports the COC table in 2019 dollars."
+    },
+    "verification_annual_usd": {
+      "label": "Separate verification / MRV cost entered",
+      "value": 0,
+      "unit": "2019 USD/year",
+      "kind": "Unknown",
+      "source": "NETL Case 0B does not report a separate verification/MRV cost. Zero here means excluded from this reproduction, not demonstrated to be free."
+    },
+    "durable_storage_fraction": {
+      "label": "Assumed durably stored share",
+      "value": 1,
+      "unit": "fraction",
+      "kind": "User assumption",
+      "source": "Conditional assumption for the modeled CO2 product. NETL assumes pipeline-spec product and saline storage costs but does not quantify leakage, permanence, or verification; this is not a verified durable-removal fraction."
+    }
+  },
+  "published_coc_table": {
+    "columns": ["Component", "COC DACnet ($/net t)", "COC DACgross ($/DAC-gross t)", "COC Plantgross ($/total-product t)"],
+    "rows": [
+      ["Capital", 349.6, 307.0, 146.3],
+      ["Fixed", 153.4, 134.7, 64.2],
+      ["Variable", 61.4, 53.9, 25.7],
+      ["Fuel", 114.0, 100.1, 47.7],
+      ["Total (excluding T&S)", 678.5, 595.7, 283.9],
+      ["CO2 T&S", 23.9, 21.0, 10.0],
+      ["Total (including T&S)", 702.4, 616.7, 293.9]
+    ],
+    "source": "Exhibit 5-16, printed p. 50 / PDF viewer p. 62. The table's one-decimal line items and totals are independently rounded. DAC100 calculates annual capital charges directly from the printed TASC × FCR; this yields $702.21/net t versus the published $702.4, primarily because printed TASC implies $349.44/net t capital while Exhibit 5-16 reports $349.6."
   },
   "scenario_bounds": {
-    "capex_reduction_max": 0.3,
-    "electricity_intensity_reduction_max": 0.3,
-    "heat_intensity_reduction_max": 0.3,
-    "sorbent_cost_reduction_max": 0.25
+    "capital_reduction_max": 0.3,
+    "fixed_om_reduction_max": 0.2,
+    "variable_om_reduction_max": 0.25,
+    "fuel_reduction_max": 0.2
   },
-  "scenario_bounds_note": "Exploratory bounds are analyst-set and illustrative, not validated technical limits. Stacked improvements are not assumed to be compatible."
+  "scenario_bounds_note": "Exploratory analyst-set ceilings, not NETL sensitivities, validated technical limits, or claims that improvements can coexist. Scenarios apply cost reductions while holding the reported annual output, process-emissions balance, T&S requirement, and study boundary constant. They are conditional arithmetic, not process re-designs."
 }
