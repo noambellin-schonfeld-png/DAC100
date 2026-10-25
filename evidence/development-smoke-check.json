@@ -41,20 +41,19 @@
       "results": {"parent_dotenv_priority": true, "repository_dotenv_priority_local_clone": true, "source_pdf_present_in_clone": true, "real_dotenv_tracked": false, "transport_storage_annual_usd_2019_basis": 2390000, "capture_cost_usd_per_gross_dac_tonne": 595.5302247585602, "project_including_ts_usd_per_gross_dac_tonne": 616.5135434591748, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2089259999999},
       "note": "Server-side route checks passed. Browser rendering, visible screenshots, and full presentation interaction were not tested."
     },
-    "portkey_connection_attempt": {
-      "status": "current_code_connection_level_URLError",
+    "portkey_connection_attempts": {
+      "status": "three_connection_level_URLErrors_without_HTTP_response",
       "model": "gpt-6-luna",
-      "source_excerpt": "NETL Case 0B Exhibit 5-14 annual fixed/variable/fuel costs at 85% CF; excerpt length 500 characters.",
-      "error_type": "URLError",
       "api_called": true,
-      "reserved_cost_usd": 0.00095,
-      "api_reported_input_tokens": null,
-      "api_reported_cached_input_tokens": null,
-      "api_reported_output_tokens": null,
-      "api_cost_usd": null,
-      "note": "The current application code attempted the course-model request but received no HTTP response. Reserved cost is a local guard estimate, not actual usage or billing."
+      "attempts": [
+        {"time_utc":"2026-10-25T17:28:50+00:00","excerpt_chars":158,"error_type":"URLError","http_status":null,"reserved_cost_usd":null,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null},
+        {"time_utc":"2026-10-25T18:16:18+00:00","excerpt_chars":500,"error_type":"URLError","http_status":null,"reserved_cost_usd":0.00095,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null},
+        {"time_utc":"2026-10-25T18:42:10+00:00","excerpt_chars":279,"error_type":"URLError","http_status":null,"reserved_cost_usd":0.0009279,"input_tokens":null,"cached_input_tokens":null,"output_tokens":null,"api_cost_usd":null}
+      ],
+      "sum_of_recorded_reservations_usd": 0.0018779,
+      "note": "No HTTP response returned usage. Recorded spend-guard reservations are local protective estimates, not actual usage or billing."
     },
-    "browser_screenshots": {"status": "not captured", "reason": "No browser automation or installed Chromium/Firefox was available, and the local server could not bind in this sandbox. Do not label mockups or generated renderings as application screenshots."},
+    "browser_screenshots": {"status": "not captured", "reason": "Google Chrome and browser automation are unavailable in this execution environment. HTTP server and endpoints were checked without a browser. Do not label mockups or generated renderings as application screenshots."},
     "practitioner_trial": {"status": "unavailable", "note": "User confirmed no DAC practitioner is available before the deadline."}
   }
 }
