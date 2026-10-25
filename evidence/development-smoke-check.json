@@ -1,6 +1,6 @@
 {
   "check_date_local": "2026-10-25",
-  "scope": "Current Case 0B input/reconciliation checked against extracted NETL PDF pages and code calculation. The public repository was cloned fresh; its README startup, baseline HTTP route, selected validation/injection guards, and parent-folder .env setup passed. Visual browser rendering and successful live-model use remain unverified.",
+  "scope": "Current Case 0B input/reconciliation checked against extracted NETL PDF pages and code calculation. The public repository was cloned fresh; its README startup, baseline HTTP route, selected validation/injection guards, and parent-folder .env setup passed. CarbonPlan calculator/explainer pages were inspected for the alternative audit. Visual browser rendering and successful live-model use remain unverified.",
   "results": {
     "python_syntax": {"status": "passed", "command": "python3 -m py_compile app.py"},
     "browser_script_syntax": {"status": "passed", "method": "Extracted the inline JavaScript from static/index.html and passed it to node --check"},
@@ -41,6 +41,17 @@
       "results": {"parent_dotenv_priority": true, "repository_dotenv_priority_local_clone": true, "source_pdf_present_in_clone": true, "real_dotenv_tracked": false, "transport_storage_annual_usd_2019_basis": 2390000, "capture_cost_usd_per_gross_dac_tonne": 595.5302247585602, "project_including_ts_usd_per_gross_dac_tonne": 616.5135434591748, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2089259999999},
       "note": "Server-side route checks passed. Browser rendering, visible screenshots, and full presentation interaction were not tested."
     },
+    "carbonplan_product_audit": {
+      "checked_date_local": "2026-10-25",
+      "pages": [
+        {"url":"https://carbonplan.org/research/dac-calculator","http_status":200},
+        {"url":"https://carbonplan.org/research/dac-calculator-explainer","http_status":200}
+      ],
+      "observed_features": "Browser-based open-source JavaScript calculator for net-removed cost; NGCC, wind, and solar scenarios; interactive facility scale, lifetime, WACC, capital, capacity-factor, energy, O&M, gas-price, and leakage parameters with sensitivity charts.",
+      "boundary_from_explainer": "Includes DAC and energy infrastructure; excludes CO2 transport and storage. Calculator page attributes the model to McQueen et al. (2021).",
+      "limitation": "Product-page and explainer audit only; no same-task calculation or user comparison was performed."
+    },
+    "same_task_competitor_comparison": {"status":"not_run","tools":"ChatGPT and CarbonPlan calculator","reason":"No browser session or common end-to-end trial was available. The CarbonPlan product audit above is a documented page review, not a benchmark."},
     "portkey_connection_attempts": {
       "status": "three_connection_level_URLErrors_without_HTTP_response",
       "model": "gpt-6-luna",
