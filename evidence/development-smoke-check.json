@@ -41,6 +41,14 @@
       "results": {"parent_dotenv_priority": true, "repository_dotenv_priority_local_clone": true, "source_pdf_present_in_clone": true, "real_dotenv_tracked": false, "transport_storage_annual_usd_2019_basis": 2390000, "capture_cost_usd_per_gross_dac_tonne": 595.5302247585602, "project_including_ts_usd_per_gross_dac_tonne": 616.5135434591748, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2089259999999},
       "note": "Server-side route checks passed. Browser rendering, visible screenshots, and full presentation interaction were not tested."
     },
+    "fresh_public_clone_final": {
+      "status": "passed_after_final_documentation_push",
+      "repository_url": "https://github.com/noambellin-schonfeld-png/DAC100",
+      "cloned_commit": "accb368a40057996f8f75352552cb5a6350b3e8c",
+      "setup": "Shallow-cloned the public repository into a new temporary folder, placed a placeholder PORTKEY_API_KEY in its parent .env, followed README startup with python3 app.py, then removed the clone. A separate fresh Python process confirmed that a placeholder .env inside the repository takes priority over the parent .env.",
+      "results": {"dashboard_http": 200, "config_http": 200, "calculate_http": 200, "model_configured_from_parent_placeholder": true, "repository_env_priority": true, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2089259999999, "source_pdf_present": true, "real_dotenv_tracked": false},
+      "note": "No model request was made with placeholder credentials. Server-side checks do not establish visual browser rendering."
+    },
     "carbonplan_product_audit": {
       "checked_date_local": "2026-10-25",
       "pages": [
