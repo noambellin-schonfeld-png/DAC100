@@ -73,7 +73,7 @@
       "sum_of_recorded_reservations_usd": 0.002801,
       "note": "No HTTP response returned usage. Recorded spend-guard reservations are local protective estimates, not actual usage or billing."
     },
-    "browser_screenshots": {"status": "not captured", "reason": "Google Chrome and browser automation are unavailable in this execution environment. HTTP server and endpoints were checked without a browser. Do not label mockups or generated renderings as application screenshots."},
+    "browser_screenshots": {"status": "genuine_injection_rejection_captured", "files": ["assets/injection-rejected.jpg"], "capture_date_local": "2026-10-25", "observed_message": "This excerpt contains instruction-like text ... It was stopped before any API request.", "activity_log": {"time_utc": "2026-10-25T19:10:48+00:00", "event": "prompt_injection_rejected", "api_called": false}, "remaining": ["baseline dashboard screenshot", "successful Luna extraction/tool-flow screenshot", "print pagination", "slide arrow/fullscreen interaction"]},
     "practitioner_trial": {"status": "unavailable", "note": "User confirmed no DAC practitioner is available before the deadline."}
   }
 }
