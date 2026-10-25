@@ -1,6 +1,6 @@
 # DAC100
 
-**Repository URL:** pending public GitHub setup. Create the public repository before submitting and replace this line with its URL in this file and `report.html`.<br>
+**Repository URL:** <https://github.com/noambellin-schonfeld-png/DAC100><br>
 **Hosted app:** not hosted; run locally using the steps below.
 
 DAC100 is an R&D triage prototype for solid-sorbent direct air capture. It reproduces NETL's Case 0B cost-of-capture result from the published annual flows and cost breakdown, keeps the study's modeled net atmospheric-removal basis distinct from a full lifecycle claim, explores bounded cost scenarios, and uses GPT-6 Luna to extract candidate claims from research for human review and a constrained Python calculation.

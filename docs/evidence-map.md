@@ -4,16 +4,16 @@
 |---|---|---|
 | Idea: novelty and real-world value (21) | Case 0B cost reproduction; source-labeled research claims; constrained evidence-to-calculation handoff; research follow-up questions | Source/document workflow is now implemented. No practitioner trial is available; workflow differentiation remains a design contribution, not proven user value. |
 | Application works (15) | Standard-library local app; NETL annual cost calculation; three-denominator COC comparison; one-at-a-time sensitivity; bounded scenarios; evidence extractor; reviewed claim-to-tool flow; local activity/usage log | Current Python functions reproduce the rounded source values, reject an injection pattern and unreviewed claim, and validate bounds. HTTP/browser route is unavailable in the sandbox because socket binding is denied. AI connection previously failed; no successful model run or token usage. Screenshots absent. |
-| Staff can run (5) | README, `.env.example`, repository-first then parent `.env` lookup, bundled source PDF, Python stdlib | Current committed repo cloned locally; parent/repository placeholder `.env` priority, bundled PDF, Python import, and calculation passed. Could not start the HTTP server or browser because the sandbox denies local socket binding. Public GitHub clone pending. |
+| Staff can run (5) | Public GitHub repository, README, `.env.example`, repository-first then parent `.env` lookup, bundled source PDF, Python stdlib | Public repo created. Current committed code was cloned locally; parent/repository placeholder `.env` priority, bundled PDF, Python import, and calculation passed. Could not start the HTTP server/browser because the sandbox denies local socket binding. Public GitHub clone/startup remains to verify. |
 | Look and feel (10) | Source-tagged input editor, cost breakdown, scenario sliders, published result cross-check, evidence review and activity log | UI refactored around Case 0B. No browser rendering/screenshot check yet. |
 | Motivation + what is new (8) | Report sections 2–3 | NETL report and direct Case 0B comparators are now identified. CarbonPlan product audit and comparative ChatGPT trial remain to be done; practitioner trial unavailable. |
 | Agent design (10) | Report section 4, evidence-to-tool diagram, source claims and bounded deterministic tool | Workflow is implemented. A real Luna run and screenshots of each step remain unavailable. |
 | Tokenomics (8) | API log records input, cached-input, output tokens and rate-based cost | No successful response returned usage. Do not report invented tokens or per-user/scale dollar totals. |
 | Safety (8) | Input validation, excerpt cap, instruction-pattern block, human approval, exact-unit/condition validation, bounded cost reductions, ≤2 requests/≤1 calc call, timeout and daily spend caps | Current direct Python checks rejected a prompt-injection pattern and unreviewed claim and validated the storage-fraction bound. HTTP/UI presentation still needs a browser check. Detector is narrow and does not guarantee universal prompt-injection prevention. |
 | Impact + metrics (5) | Report section 7; quantified Case 0B cost decomposition | NETL modeled estimate is reported evidence, not DAC100 user impact. User confirms no practitioner can test before deadline; no impact or user-trial claim will be made. |
-| Report design (2) | Self-contained 10–15 print-page `report.html`; embedded diagram/screenshots | 11 explicit page sections with source data, reconciliation, and inline diagram. Genuine app screenshots and pagination check pending. |
+| Report design (2) | Self-contained 10–15 print-page `report.html`; embedded diagram/screenshots | 12 explicit page sections with source data, reconciliation, and inline diagram. Genuine app screenshots and physical pagination check pending. |
 | Slides (8) | <=10-slide Reveal.js `slides.html`, source-backed result, diagram, demo visual and cost evidence | 9 slides with Case 0B values and inline diagram. Real screenshots, key navigation, CDN, and F-key checks pending. |
-| Submission hygiene | Public repository, no committed keys, supported `.env` arrangement, single-file HTML deliverables | `.env` is ignored; `.env.example` is a placeholder. Public repo is pending. Source PDF is bundled. Verify `git status` and GitHub URL before Canvas. |
+| Submission hygiene | Public repository, no committed keys, supported `.env` arrangement, single-file HTML deliverables | Public repo created and linked in README/report/slides. `.env` is ignored; `.env.example` is a placeholder. Source PDF is bundled. Clone the public repo and recheck tracked files before Canvas. |
 
 ## Case 0B reproduction and reconciliation
 
@@ -31,9 +31,9 @@
 
 ## Remaining evidence to collect
 
-1. On a regular local machine, follow README exactly and verify that the HTTP app starts and the UI opens; this sandbox denied socket binding. Then repeat the HTTP invalid-input, injection, and claim-approval checks and clone the public repo.
+1. Clone the public repository on a regular local machine, follow README exactly, and verify that the HTTP app starts and UI opens; this sandbox denied socket binding. Then repeat HTTP invalid-input, injection, and claim-approval checks.
 2. Obtain a successful course Portkey GPT-6 Luna extraction and reviewed calculation-agent run from a network-enabled environment. Keep actual usage JSONL without exposing the key; report returned token counts and rate-card cost.
 3. Capture genuine running-app screenshots for baseline, successful agent, and blocked injection. Do not use diagrams or mockups as application screenshots.
 4. Audit CarbonPlan's DAC calculator and ChatGPT on the same task; cite checked pages and date, and acknowledge overlapping capabilities.
-5. Create the public GitHub repository, replace the placeholder URL, verify no `.env`/credentials are tracked, and clone/run the actual public repo.
+5. Verify no `.env` or credentials are tracked in the public repository and run it from a fresh public clone.
 6. Print-check `report.html` at letter size for 10–15 pages. Open `slides.html`, check every slide, arrow navigation, and F-key full screen; CDN requires a network-enabled browser.
