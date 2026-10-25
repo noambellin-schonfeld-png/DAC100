@@ -483,6 +483,9 @@ def analyze_excerpt(title: object, excerpt: object) -> dict:
     except HTTPError as exc:
         append_event({"event": "evidence_extraction_error", "request_id": request_id, "model": DEFAULT_MODEL, "http_status": exc.code, "excerpt_chars": len(excerpt), "reserved_cost_usd": reserved_cost, "api_called": True})
         raise RuntimeError(f"The model request failed with HTTP {exc.code}. Check the Portkey key, model access, and connection.") from None
+    except json.JSONDecodeError:
+        append_event({"event": "evidence_extraction_error", "request_id": request_id, "model": DEFAULT_MODEL, "error_type": "invalid_json_response", "excerpt_chars": len(excerpt), "reserved_cost_usd": reserved_cost, "api_called": True})
+        raise RuntimeError("The model endpoint returned an unreadable response; token usage was not available.") from None
     except (URLError, TimeoutError, OSError) as exc:
         append_event({"event": "evidence_extraction_error", "request_id": request_id, "model": DEFAULT_MODEL, "error_type": type(exc).__name__, "excerpt_chars": len(excerpt), "reserved_cost_usd": reserved_cost, "api_called": True})
         raise RuntimeError("The model request could not complete. Check your connection and try again.") from None
