@@ -4,7 +4,7 @@
 |---|---|---|
 | Idea: novelty and real-world value (21) | Case 0B cost reproduction; source-labeled research claims; constrained evidence-to-calculation handoff; research follow-up questions | Source/document workflow is now implemented. No practitioner trial is available; workflow differentiation remains a design contribution, not proven user value. |
 | Application works (15) | Standard-library local app; NETL annual cost calculation; three-denominator COC comparison; one-at-a-time sensitivity; bounded scenarios; evidence extractor; reviewed claim-to-tool flow; local activity/usage log | Current Python functions reproduce the rounded source values, reject an injection pattern and unreviewed claim, and validate bounds. HTTP/browser route is unavailable in the sandbox because socket binding is denied. AI connection previously failed; no successful model run or token usage. Screenshots absent. |
-| Staff can run (5) | README, `.env.example`, repository-first then parent `.env` lookup, bundled source PDF, Python stdlib | The previous fresh-clone check passed before this Case 0B refactor. It must be repeated after refactor, preferably using the public GitHub URL. Public repo URL pending. |
+| Staff can run (5) | README, `.env.example`, repository-first then parent `.env` lookup, bundled source PDF, Python stdlib | Current committed repo cloned locally; parent/repository placeholder `.env` priority, bundled PDF, Python import, and calculation passed. Could not start the HTTP server or browser because the sandbox denies local socket binding. Public GitHub clone pending. |
 | Look and feel (10) | Source-tagged input editor, cost breakdown, scenario sliders, published result cross-check, evidence review and activity log | UI refactored around Case 0B. No browser rendering/screenshot check yet. |
 | Motivation + what is new (8) | Report sections 2–3 | NETL report and direct Case 0B comparators are now identified. CarbonPlan product audit and comparative ChatGPT trial remain to be done; practitioner trial unavailable. |
 | Agent design (10) | Report section 4, evidence-to-tool diagram, source claims and bounded deterministic tool | Workflow is implemented. A real Luna run and screenshots of each step remain unavailable. |
@@ -31,7 +31,7 @@
 
 ## Remaining evidence to collect
 
-1. Repeat HTTP calculator, invalid-input, injection, claim-approval, and fresh public clone checks; update `evidence/development-smoke-check.json` with actual outputs. The current record contains direct-function checks only.
+1. On a regular local machine, follow README exactly and verify that the HTTP app starts and the UI opens; this sandbox denied socket binding. Then repeat the HTTP invalid-input, injection, and claim-approval checks and clone the public repo.
 2. Obtain a successful course Portkey GPT-6 Luna extraction and reviewed calculation-agent run from a network-enabled environment. Keep actual usage JSONL without exposing the key; report returned token counts and rate-card cost.
 3. Capture genuine running-app screenshots for baseline, successful agent, and blocked injection. Do not use diagrams or mockups as application screenshots.
 4. Audit CarbonPlan's DAC calculator and ChatGPT on the same task; cite checked pages and date, and acknowledge overlapping capabilities.

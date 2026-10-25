@@ -32,8 +32,25 @@
     "unreviewed_claim_handoff": {"status": "rejected_by_current_claim_validator", "exception": "ValueError", "model_api_called": false},
     "approved_10_percent_variable_cost_claim": {"status": "accepted_by_current_claim_validator", "note": "Direct code-path check with a synthetic, explicitly human-reviewed compatible claim. Not a real research extraction or model run."},
     "http_server_after_refactor": {"status": "not_run", "reason": "Attempt to start app.py on 127.0.0.1:8765 returned Operation not permitted while binding the socket in this environment."},
-    "fresh_clone_after_refactor": {"status": "not_run", "note": "A fresh local Git clone passed before the Case 0B refactor, but those results are stale and are not treated as final verification."},
-    "portkey_connection_attempt": {"status": "earlier_connection_level_URLError", "context": "Attempt preceded the Case 0B refactor; no HTTP response or token usage was returned. A successful current-code model run remains outstanding."},
+    "fresh_clone_after_refactor": {
+      "status": "local_code_and_env_setup_passed_http_not_run",
+      "setup": "Cloned the current committed repository into /private/tmp, placed a placeholder .env in its parent folder, imported the app, and calculated the Case 0B baseline. A second clone had both parent and repository placeholder .env files.",
+      "results": {"parent_dotenv_priority": true, "repository_dotenv_priority": true, "source_pdf_present_in_clone": true, "capture_cost_usd_per_gross_dac_tonne": 595.53022475856, "netl_boundary_cost_usd_per_net_atmospheric_tonne": 702.2079259999999},
+      "note": "The README startup step python3 app.py and browser use could not complete because this sandbox denies local socket binding. This is not a full staff-run acceptance check."
+    },
+    "portkey_connection_attempt": {
+      "status": "current_code_connection_level_URLError",
+      "model": "gpt-6-luna",
+      "source_excerpt": "NETL Case 0B Exhibit 5-14 annual fixed/variable/fuel costs at 85% CF; excerpt length 500 characters.",
+      "error_type": "URLError",
+      "api_called": true,
+      "reserved_cost_usd": 0.00095,
+      "api_reported_input_tokens": null,
+      "api_reported_cached_input_tokens": null,
+      "api_reported_output_tokens": null,
+      "api_cost_usd": null,
+      "note": "The current application code attempted the course-model request but received no HTTP response. Reserved cost is a local guard estimate, not actual usage or billing."
+    },
     "browser_screenshots": {"status": "not captured", "reason": "No browser automation or installed Chromium/Firefox was available, and the local server could not bind in this sandbox. Do not label mockups or generated renderings as application screenshots."},
     "practitioner_trial": {"status": "unavailable", "note": "User confirmed no DAC practitioner is available before the deadline."}
   }
