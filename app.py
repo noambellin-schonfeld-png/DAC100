@@ -19,11 +19,9 @@ BASELINE_PATH = ROOT / "data" / "baseline.json"
 WEB_PATH = ROOT / "static" / "index.html"
 PROMPT_PATH = ROOT / "prompts" / "evidence_extractor.md"
 LOG_PATH = ROOT / "output" / "usage.jsonl"
-DEFAULT_MODEL = "gpt-6-luna"
-DEFAULT_BASE_URL = "https://api.portkey.ai/v1"
 MAX_BODY_BYTES = 40_000
 MAX_EXCERPT_CHARS = 8_000
-MAX_OUTPUT_TOKENS = 1_100
+MAX_OUTPUT_TOKENS = 2_000
 REQUEST_TIMEOUT_S = 40
 MAX_AI_RUNS_PER_DAY = 20
 MAX_ESTIMATED_DAILY_SPEND_USD = 0.05
@@ -57,7 +55,7 @@ SCENARIO_INPUTS = {
 PROMPT_INJECTION = re.compile(
     r"(?:ignore\s+(?:all\s+)?(?:previous|prior|above)\s+instructions"
     r"|reveal\s+(?:the\s+)?(?:system|developer|hidden)\s+prompt"
-    r"|(?:print|show|expose|send|exfiltrate)\s+(?:the\s+)?(?:portkey\s+)?(?:api\s+)?key"
+    r"|(?:print|show|expose|send|exfiltrate)\s+(?:the\s+)?(?:(?:openai|portkey)\s+)?(?:api\s+)?key"
     r"|you\s+are\s+now\s+(?:a\s+)?(?:system|developer|admin)"
     r"|(?:call|invoke)\s+(?:the\s+)?(?:tool|function)\s+\w+)",
     re.IGNORECASE,
@@ -84,6 +82,8 @@ def load_env_files() -> None:
 
 
 load_env_files()
+DEFAULT_MODEL = os.getenv("OPENAI_MODEL", "gpt-6-luna").strip() or "gpt-6-luna"
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").strip().rstrip("/") or "https://api.openai.com/v1"
 BASELINE = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
 INPUT_META = BASELINE["inputs"]
 SOURCE_KINDS = ("Reported measurement", "Published modeling assumption", "User assumption", "Unknown")
@@ -91,7 +91,7 @@ SOURCE_KINDS = ("Reported measurement", "Published modeling assumption", "User a
 
 def append_event(event: dict) -> None:
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    item = {"time_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"), **event}
+    item = {"time_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"), "provider": "openai", **event}
     with LOG_LOCK:
         with LOG_PATH.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(item, ensure_ascii=False, separators=(",", ":")) + "\n")
@@ -269,12 +269,14 @@ def eligible_scenario_claims(claims_raw: object, values: dict[str, float]) -> li
     return eligible
 
 
-def _post_portkey_responses(payload: dict) -> dict:
+def _openai_headers(key: str) -> dict[str, str]:
+    """Build direct OpenAI API authentication headers."""
+    return {"Content-Type": "application/json", "Authorization": f"Bearer {key}"}
+
+
+def _post_openai_responses(payload: dict) -> dict:
     key = _model_key()
-    headers = {"Content-Type": "application/json", "x-portkey-api-key": key,
-               "x-portkey-provider": os.getenv("PORTKEY_PROVIDER", "openai")}
-    base = os.getenv("PORTKEY_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    request = Request(base + "/responses", data=json.dumps(payload, ensure_ascii=False).encode("utf-8"), headers=headers, method="POST")
+    request = Request(OPENAI_BASE_URL + "/responses", data=json.dumps(payload, ensure_ascii=False).encode("utf-8"), headers=_openai_headers(key), method="POST")
     with urlopen(request, timeout=REQUEST_TIMEOUT_S) as response:
         return json.loads(response.read().decode("utf-8"))
 
@@ -310,7 +312,7 @@ def prioritize_evidence(inputs_raw: object, claims_raw: object) -> dict:
     claims = eligible_scenario_claims(claims_raw, values)
     key = _model_key()
     if not key:
-        raise RuntimeError("AI evidence review needs PORTKEY_API_KEY in DAC100/.env or the parent folder's .env.")
+        raise RuntimeError("AI evidence review needs OPENAI_API_KEY in DAC100/.env or the parent folder's .env.")
     task = {"user_question": "Which source-supported, bounded changes merit priority, and what does the deterministic Case 0B boundary calculation imply about the $100 per net atmospheric tonne target?",
             "current_inputs": [{"input_id": k, "label": INPUT_META[k]["label"], "value": values[k], "unit": INPUT_META[k]["unit"]} for k in INPUT_META],
             "approved_evidence": claims,
@@ -335,14 +337,14 @@ def prioritize_evidence(inputs_raw: object, claims_raw: object) -> dict:
     request_id, reserved_cost = _check_ai_budget(len(input_text), model_calls=2, output_tokens_per_call=700)
     usage_rows = []
     try:
-        first = _post_portkey_responses({"model": DEFAULT_MODEL, "instructions": system,
+        first = _post_openai_responses({"model": DEFAULT_MODEL, "instructions": system,
             "input": [{"role": "user", "content": [{"type": "input_text", "text": input_text}]}],
             "tools": [tool], "tool_choice": {"type": "function", "name": "evaluate_supported_scenario"},
             "max_output_tokens": 700})
         usage_rows.append(_usage_numbers(first))
     except HTTPError as exc:
         append_event({"event": "evidence_agent_error", "request_id": request_id, "model": DEFAULT_MODEL, "http_status": exc.code, "reserved_cost_usd": reserved_cost, "api_called": True})
-        raise RuntimeError(f"The model request failed with HTTP {exc.code}. Check Portkey access and model configuration.") from None
+        raise RuntimeError(f"The model request failed with HTTP {exc.code}. Check OPENAI_API_KEY access and model configuration.") from None
     except (URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
         append_event({"event": "evidence_agent_error", "request_id": request_id, "model": DEFAULT_MODEL, "error_type": type(exc).__name__, "reserved_cost_usd": reserved_cost, "api_called": True})
         raise RuntimeError("The model request could not complete. Check your connection and try again.") from None
@@ -386,7 +388,7 @@ def prioritize_evidence(inputs_raw: object, claims_raw: object) -> dict:
         {"type": "function_call_output", "call_id": call_id, "output": json.dumps(comparison, ensure_ascii=False)},
     ]
     try:
-        second = _post_portkey_responses({"model": DEFAULT_MODEL, "instructions": system,
+        second = _post_openai_responses({"model": DEFAULT_MODEL, "instructions": system,
             "input": followup_input, "max_output_tokens": 700})
         usage_rows.append(_usage_numbers(second))
     except HTTPError as exc:
@@ -428,7 +430,7 @@ def prioritized_questions(values: dict[str, float], result: dict) -> list[str]:
 
 
 def _model_key() -> str:
-    return os.getenv("PORTKEY_API_KEY", "").strip()
+    return os.getenv("OPENAI_API_KEY", "").strip()
 
 
 def _check_ai_budget(excerpt_chars: int, model_calls: int = 1, output_tokens_per_call: int = MAX_OUTPUT_TOKENS) -> tuple[str, float]:
@@ -440,10 +442,19 @@ def _check_ai_budget(excerpt_chars: int, model_calls: int = 1, output_tokens_per
         for line in LOG_PATH.read_text(encoding="utf-8").splitlines()[-5_000:]:
             try:
                 event = json.loads(line)
+                # Earlier Portkey attempts are historical and do not consume
+                # this direct OpenAI key's local request/spend guardrail.
+                if event.get("provider") != "openai":
+                    continue
                 at = datetime.fromisoformat(event.get("time_utc", ""))
                 if now - at > timedelta(days=1):
                     continue
-                if event.get("api_called") is True or event.get("event", "").startswith("evidence_extraction_"):
+                # A local connection failure did not reach the model service and
+                # should not consume the model-request quota. HTTP responses and
+                # successful calls still count toward the rolling guardrail.
+                extraction_error = event.get("event") == "evidence_extraction_error"
+                connection_failure = extraction_error and event.get("error_type") in {"URLError", "TimeoutError", "OSError"}
+                if (event.get("api_called") is True or event.get("event", "").startswith("evidence_extraction_")) and not connection_failure:
                     requests_today += 1
                     spent_today += float(event.get("api_cost_usd", event.get("reserved_cost_usd", 0.0)) or 0.0)
             except (ValueError, TypeError, json.JSONDecodeError):
@@ -479,12 +490,14 @@ def analyze_excerpt(title: object, excerpt: object) -> dict:
         raise PermissionError("This excerpt contains instruction-like text asking the model to change roles, disclose instructions or keys, or invoke a tool. It was stopped before any API request. Remove the suspicious instruction text and try again.")
     key = _model_key()
     if not key:
-        raise RuntimeError("AI evidence review needs PORTKEY_API_KEY in DAC100/.env or the parent folder's .env. The calculator remains available without it.")
+        raise RuntimeError("AI evidence review needs OPENAI_API_KEY in DAC100/.env or the parent folder's .env. The calculator remains available without it.")
     request_id, reserved_cost = _check_ai_budget(len(excerpt))
 
     input_catalog = [{"input_id": key_name, "label": meta["label"], "unit": meta["unit"]} for key_name, meta in INPUT_META.items()]
     instructions = PROMPT_PATH.read_text(encoding="utf-8")
-    user_payload = {"source_title": title.strip() or "Untitled excerpt", "allowed_inputs": input_catalog, "research_excerpt_untrusted_data": excerpt}
+    user_payload = {"source_title": title.strip() or "Untitled excerpt", "allowed_inputs": input_catalog,
+                    "requested_output_format": "Return a JSON object matching the system instructions.",
+                    "research_excerpt_untrusted_data": excerpt}
     request_data = json.dumps({
         "model": DEFAULT_MODEL,
         "instructions": instructions,
@@ -492,16 +505,13 @@ def analyze_excerpt(title: object, excerpt: object) -> dict:
         "max_output_tokens": MAX_OUTPUT_TOKENS,
         "text": {"format": {"type": "json_object"}},
     }).encode("utf-8")
-    base = os.getenv("PORTKEY_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    headers = {"Content-Type": "application/json", "x-portkey-api-key": key,
-               "x-portkey-provider": os.getenv("PORTKEY_PROVIDER", "openai")}
-    req = Request(base + "/responses", data=request_data, headers=headers, method="POST")
+    req = Request(OPENAI_BASE_URL + "/responses", data=request_data, headers=_openai_headers(key), method="POST")
     try:
         with urlopen(req, timeout=REQUEST_TIMEOUT_S) as response:
             body = json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
         append_event({"event": "evidence_extraction_error", "request_id": request_id, "model": DEFAULT_MODEL, "http_status": exc.code, "excerpt_chars": len(excerpt), "reserved_cost_usd": reserved_cost, "api_called": True})
-        raise RuntimeError(f"The model request failed with HTTP {exc.code}. Check the Portkey key, model access, and connection.") from None
+        raise RuntimeError(f"The model request failed with HTTP {exc.code}. Check OPENAI_API_KEY access, model access, and connection.") from None
     except json.JSONDecodeError:
         append_event({"event": "evidence_extraction_error", "request_id": request_id, "model": DEFAULT_MODEL, "error_type": "invalid_json_response", "excerpt_chars": len(excerpt), "reserved_cost_usd": reserved_cost, "api_called": True})
         raise RuntimeError("The model endpoint returned an unreadable response; token usage was not available.") from None
@@ -516,6 +526,15 @@ def analyze_excerpt(title: object, excerpt: object) -> dict:
     cache_tokens = details.get("cached_tokens")
     out_tokens = usage.get("output_tokens")
     cost = _usage_cost({"input_tokens": in_tokens, "cached_input_tokens": cache_tokens, "output_tokens": out_tokens})
+    incomplete = body.get("incomplete_details") or {}
+    if body.get("status") == "incomplete":
+        append_event({"event": "evidence_extraction_incomplete_output", "request_id": request_id, "model": DEFAULT_MODEL,
+                      "incomplete_reason": incomplete.get("reason"), "input_tokens": in_tokens,
+                      "cached_input_tokens": cache_tokens, "output_tokens": out_tokens, "api_cost_usd": cost,
+                      "reserved_cost_usd": reserved_cost, "excerpt_chars": len(excerpt), "api_called": True})
+        if incomplete.get("reason") == "max_output_tokens":
+            raise RuntimeError("The excerpt produced more evidence detail than the response limit allowed. Try a shorter excerpt.")
+        raise RuntimeError("The model response was incomplete. Please try again with a shorter excerpt.")
     try:
         result = json.loads(raw_text)
         if not isinstance(result, dict) or not isinstance(result.get("claims", []), list) or not isinstance(result.get("uncertainties", []), list):

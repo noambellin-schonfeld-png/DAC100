@@ -23,14 +23,14 @@ NETL's modeled net-removal boundary includes on-site NGCC residual emissions and
 
 - Python 3.10 or newer
 - A modern browser
-- A Portkey course key in `PORTKEY_API_KEY` for evidence extraction and the AI prioritization workflow; baseline calculations run without a key
+- An OpenAI API key in `OPENAI_API_KEY` for evidence extraction and the AI prioritization workflow; baseline calculations run without a key
 
 The calculator uses only Python's standard library. No packages, full dataset, external database, or background service are needed.
 
 ## Run locally
 
 1. Clone the repository and open a terminal in the `DAC100` folder.
-2. (Optional, for AI evidence extraction) set `PORTKEY_API_KEY` in a `.env` file either inside `DAC100/` or in its parent folder. The app checks the repository folder first, then the parent; the repository `.env` takes priority. You can copy `.env.example` and enter the key locally. Never commit `.env` or a real key.
+2. (Optional, for AI evidence extraction) set `OPENAI_API_KEY` in a `.env` file either inside `DAC100/` or in its parent folder. Set `OPENAI_MODEL=gpt-6-luna` and `OPENAI_BASE_URL=https://api.openai.com/v1`. The app checks the repository folder first, then the parent; the repository `.env` takes priority. You can copy `.env.example` and enter the key locally. Never commit `.env` or a real key.
 3. Start the application:
 
    ```sh
@@ -45,9 +45,9 @@ There is no larger dataset to download. The full published source report is incl
 
 ## Model and configuration
 
-The AI uses only `gpt-6-luna` through the course Portkey connection pattern verified in the course examples: `https://api.portkey.ai/v1`, the OpenAI provider, and the `x-portkey-api-key` header. The app reads `PORTKEY_API_KEY`. Optional `PORTKEY_BASE_URL` and `PORTKEY_PROVIDER` default to those values; it does not fall back to `OPENAI_API_KEY` or another model. `.env.example` lists all app-specific key and optional connection values.
+The app sends extraction and prioritization requests directly to the OpenAI Responses API at `https://api.openai.com/v1/responses`, with `Authorization: Bearer <OPENAI_API_KEY>`. The default model is `gpt-6-luna`; `OPENAI_MODEL` and `OPENAI_BASE_URL` can be set in `.env`. `.env.example` shows these settings. A successful local smoke extraction confirmed access for the configured key and model.
 
-The excerpt is untrusted, size-limited data. Extraction has no tools. Before any scenario tool call, the user must review and approve an exact claim, unit, and condition. The prioritization agent can make at most two model requests and one local calculation-tool call. Requests have a 40-second timeout and output-token limits. The app records API-reported token usage when a response is returned, caps use at 20 AI calls per rolling day, and blocks estimated daily spend above $0.05. Logs stay local in `output/usage.jsonl` and are excluded from Git. Seven GPT-6 Luna attempts have failed at the connection stage, including three extraction requests on October 25; no successful usage or token count is claimed. The latest requests were recorded as `URLError` after passing local input screening.
+The excerpt is untrusted, size-limited data. Extraction has no tools. Before any scenario tool call, the user must review and approve an exact claim, unit, and condition. The prioritization agent can make at most two model requests and one local calculation-tool call. Requests have a 40-second timeout and output-token limits. The app records API-reported token usage when a response is returned, caps use at 20 AI calls per rolling day, and blocks estimated daily spend above $0.05. Logs stay local in `output/usage.jsonl` and are excluded from Git. Earlier Portkey attempts on October 25 produced fourteen `URLError` failures and seven HTTP 403 responses, with no model output or API-reported token usage. Those historical attempts did not use the direct OpenAI key and are excluded from its provider-specific local guardrail. The former log's $0.0184214 in reservations is a protective estimate, not actual spend or billing. Two direct OpenAI smoke extractions with `gpt-6-luna` succeeded on October 25. The NETL baseline sample returned three candidate claims (646 input, 799 output tokens; $0.0004641 estimated), and a Fasihi et al. (2019) abstract excerpt returned four (714 input, 965 output tokens; $0.0005539 estimated). These estimates use the course tokenomics rate sheet and are not confirmed invoice costs. An earlier paper-excerpt response was cut off at the 1,100-token output limit; the limit is now 2,000 and the prompt asks for at most five concise claims. Three earlier direct requests returned HTTP 400 because JSON mode required an explicit JSON instruction in the input; that was corrected. The prioritization workflow has not yet been exercised against the direct key. Human review caught a transcription error in the Fasihi test: one summary said 222/33 while its quote said 222/133; no claim was approved or used.
 
 ## Cost and scenario interpretation
 
